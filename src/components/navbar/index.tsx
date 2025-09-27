@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react"
 import Logo from "./logo"
 import { HamburgerButton } from "./hamburger-button"
 import { MobileMenu } from "./mobile-menu"
+import { Button } from "../ui/button"
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -30,9 +31,11 @@ export default function Navbar() {
   if (!session) {
     return (
       <nav className="fixed top-3 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-auto px-4 lg:px-0">
-        <div className="relative backdrop-blur-md bg-slate-800/30 border border-white/10 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 shadow-2xl">
+        <div className="relative backdrop-blur-md bg-gradient-to-r from-card via-card/95 to-card border border-primary/20 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 shadow-2xl shadow-primary/30">
           {/* Background glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-500/10 via-transparent to-brand-500/10 rounded-full" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/25 via-primary/10 to-primary/25 rounded-full" />
+          {/* Inner brand accent */}
+          <div className="absolute inset-[1px] bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-full" />
 
           <div className="relative flex items-center gap-3 lg:gap-6">
             <Logo
@@ -43,18 +46,15 @@ export default function Navbar() {
             />
 
             {/* Login button */}
-            <button
+            <Button
               onClick={handleLogin}
               onMouseEnter={() => setHoveredItem("login")}
               onMouseLeave={() => setHoveredItem(null)}
-              className={`px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg border ${hoveredItem === "login"
-                  ? "bg-brand-600 text-linen border-brand-500 shadow-lg shadow-brand-500/20"
-                  : "text-gray-300 hover:text-white border-white/20 hover:border-brand-500/50"
-                }`}
+              // variant="backdrop"
               tabIndex={0}
             >
               Login
-            </button>
+            </Button>
           </div>
         </div>
       </nav>
@@ -65,9 +65,11 @@ export default function Navbar() {
   return (
     <>
       <nav className={`fixed top-3 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-auto px-4 lg:px-0 transition-transform duration-1200 ease-out ${isMobileMenuOpen ? '-translate-y-32' : 'translate-y-0'}`}>
-        <div className="relative backdrop-blur-md bg-slate-800/30 border border-white/10 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 shadow-2xl">
+        <div className="relative backdrop-blur-md bg-gradient-to-r from-card via-card/95 to-card border border-primary/20 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 shadow-2xl shadow-primary/30">
           {/* Background glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-brand-500/10 via-transparent to-brand-500/10 rounded-full" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/25 via-primary/10 to-primary/25 rounded-full" />
+          {/* Inner brand accent */}
+          <div className="absolute inset-[1px] bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-full" />
 
           <div className="relative flex items-center gap-3 lg:gap-0 lg:justify-start lg:space-x-8">
             <Logo
@@ -86,7 +88,7 @@ export default function Navbar() {
             {/* Desktop navigation - hidden on mobile */}
             <div className="hidden lg:flex items-center space-x-8">
               {/* Desktop separator */}
-              <div className="w-px h-6 bg-white/10" />
+              <div className="w-px h-6 bg-gradient-to-b from-primary/40 via-border to-primary/40" />
 
               <div className="flex items-center space-x-8">
                 {navItems.map((item) => (
@@ -95,7 +97,7 @@ export default function Navbar() {
                     onClick={() => handleNavigate(item.id)}
                     onMouseEnter={() => setHoveredItem(item.id)}
                     onMouseLeave={() => setHoveredItem(null)}
-                    className="relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg text-gray-300 hover:text-white"
+                    className="relative px-3 py-2 text-sm font-medium transition-all duration-300 rounded-lg text-muted-foreground hover:text-foreground hover:bg-gradient-to-r hover:from-primary/10 hover:to-secondary/50 hover:border hover:border-primary/20"
                     tabIndex={0}
                   >
                     <span className={`transition-all duration-300 ${hoveredItem === item.id ? 'opacity-0' : 'opacity-100'

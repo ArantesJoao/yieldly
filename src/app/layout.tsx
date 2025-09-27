@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${openSans.variable} antialiased`}
+        className={`${openSans.variable} mt-20 antialiased`}
       >
         <Providers>
           <Navbar />
