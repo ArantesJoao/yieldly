@@ -1,0 +1,186 @@
+import { db } from "./db"
+import { convertDateToUTC } from "./validations"
+
+export async function updateDailyAccountSummary(accountId: bigint, date: Date) {
+  // Get all ledger entries for this account on this date
+  const dayEntries = await db.ledgerEntry.findMany({
+    where: {
+      accountId,
+      date
+    },
+    include: {
+      increaseType: true
+    }
+  })
+
+  // Calculate totals for the day
+  const dayTotal = dayEntries.reduce((sum, entry) => sum + entry.amountMinor, 0)
+  const yieldsMinor = dayEntries
+    .filter(entry => entry.increaseType.name === "Yields")
+    .reduce((sum, entry) => sum + entry.amountMinor, 0)
+  const contributionsMinor = dayEntries
+    .filter(entry => entry.increaseType.name === "Contribution")
+    .reduce((sum, entry) => sum + entry.amountMinor, 0)
+
+  // Get previous day's balance
+  const previousDay = new Date(date)
+  previousDay.setUTCDate(previousDay.getUTCDate() - 1)
+  
+  const previousSummary = await db.dailyAccountSummary.findUnique({
+    where: {
+      accountId_date: {
+        accountId,
+        date: previousDay
+      }
+    }
+  })
+
+  const previousBalance = previousSummary?.balanceEndMinor || 0
+  const balanceEndMinor = previousBalance + dayTotal
+
+  // Upsert the summary for this day
+  await db.dailyAccountSummary.upsert({
+    where: {
+      accountId_date: {
+        accountId,
+        date
+      }
+    },
+    update: {
+      balanceEndMinor,
+      yieldsMinor,
+      contributionsMinor
+    },
+    create: {
+      accountId,
+      date,
+      balanceEndMinor,
+      yieldsMinor,
+      contributionsMinor
+    }
+  })
+
+  // Update future summaries if they exist (balance rollover)
+  await rollForwardBalances(accountId, date)
+}
+
+async function rollForwardBalances(accountId: bigint, fromDate: Date) {
+  // Get all future summaries that need balance updates
+  const futureSummaries = await db.dailyAccountSummary.findMany({
+    where: {
+      accountId,
+      date: {
+        gt: fromDate
+      }
+    },
+    orderBy: {
+      date: 'asc'
+    }
+  })
+
+  let currentBalance = await getCurrentBalance(accountId, fromDate)
+
+  // Update each future summary with correct balance
+  for (const summary of futureSummaries) {
+    const dayTotal = summary.yieldsMinor + summary.contributionsMinor
+    currentBalance += dayTotal
+
+    await db.dailyAccountSummary.update({
+      where: {
+        id: summary.id
+      },
+      data: {
+        balanceEndMinor: currentBalance
+      }
+    })
+  }
+}
+
+async function getCurrentBalance(accountId: bigint, date: Date): Promise<number> {
+  const summary = await db.dailyAccountSummary.findUnique({
+    where: {
+      accountId_date: {
+        accountId,
+        date
+      }
+    }
+  })
+
+  return summary?.balanceEndMinor || 0
+}
+
+export async function getAccountSummary(
+  accountId: bigint, 
+  fromDate: string, 
+  toDate: string
+) {
+  const from = convertDateToUTC(fromDate)
+  const to = convertDateToUTC(toDate)
+
+  const summaries = await db.dailyAccountSummary.findMany({
+    where: {
+      accountId,
+      date: {
+        gte: from,
+        lte: to
+      }
+    },
+    orderBy: {
+      date: 'asc'
+    }
+  })
+
+  return summaries.map(summary => ({
+    date: summary.date.toISOString().split('T')[0],
+    balanceEndMinor: summary.balanceEndMinor,
+    yieldsMinor: summary.yieldsMinor,
+    contributionsMinor: summary.contributionsMinor
+  }))
+}
+
+export async function getTotalSummary(
+  userId: bigint,
+  fromDate: string, 
+  toDate: string
+) {
+  const from = convertDateToUTC(fromDate)
+  const to = convertDateToUTC(toDate)
+
+  // Get all summaries for user's accounts in the date range
+  const summaries = await db.dailyAccountSummary.findMany({
+    where: {
+      account: {
+        ownerUserId: userId
+      },
+      date: {
+        gte: from,
+        lte: to
+      }
+    },
+    orderBy: {
+      date: 'asc'
+    }
+  })
+
+  // Group by date and sum across accounts
+  const dateGroups = summaries.reduce((acc, summary) => {
+    const dateKey = summary.date.toISOString().split('T')[0]
+    
+    if (!acc[dateKey]) {
+      acc[dateKey] = {
+        date: dateKey,
+        balanceEndMinor: 0,
+        yieldsMinor: 0,
+        contributionsMinor: 0
+      }
+    }
+    
+    acc[dateKey].balanceEndMinor += summary.balanceEndMinor
+    acc[dateKey].yieldsMinor += summary.yieldsMinor
+    acc[dateKey].contributionsMinor += summary.contributionsMinor
+    
+    return acc
+  }, {} as Record<string, any>)
+
+  return Object.values(dateGroups).sort((a: any, b: any) => a.date.localeCompare(b.date))
+}
