@@ -5,11 +5,39 @@
   --foreground: #171717;
 }
 
-@theme inline {
+@theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Brand colors */
+  --color-brand-50: #F1F4F6;
+  --color-brand-100: #DCE3EA;
+  --color-brand-200: #B9C7D5;
+  --color-brand-300: #91A6BB;
+  --color-brand-400: #6E8AA6;
+  --color-brand-500: #4E6F8D;
+  --color-brand-600: #2F5071;
+  --color-brand-700: #0E1F34;
+  --color-brand-800: #0B192A;
+  --color-brand-900: #08131F;
+  --color-brand-950: #050C14;
+  --color-brand: #0E1F34;
+  
+  /* Linen colors */
+  --color-linen-50: #FFFBF2;
+  --color-linen-100: #F9F1DF;
+  --color-linen-200: #F0E2C1;
+  --color-linen-300: #E4CF9E;
+  --color-linen-400: #D5BB7B;
+  --color-linen-500: #C2A256;
+  --color-linen-600: #A8853B;
+  --color-linen-700: #836630;
+  --color-linen-800: #5E4823;
+  --color-linen-900: #3A2D16;
+  --color-linen-950: #23190C;
+  --color-linen: #F9F1DF;
 }
 
 @media (prefers-color-scheme: dark) {
