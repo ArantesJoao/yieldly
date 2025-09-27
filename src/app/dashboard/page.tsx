@@ -1,11 +1,14 @@
 'use client'
 
+import { Title } from "@/components/ui/title"
+import Controls from "./components/controls"
 import { useSession, signOut } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
+  const user = session?.user
   const router = useRouter()
 
   useEffect(() => {
@@ -14,7 +17,7 @@ export default function DashboardPage() {
     }
   }, [status, router])
 
-  if (status === 'loading') {
+  if (status === 'loading' || !user) {
     return (
       <div>
         <p>Loading...</p>
@@ -27,24 +30,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div>
-      <header>
-        <h1>Yieldly Dashboard</h1>
-        <div>
-          <span>Welcome, {session.user.name || session.user.email}</span>
-          <button onClick={() => signOut({ callbackUrl: '/login' })}>
-            Sign Out
-          </button>
-        </div>
-      </header>
-
-      <main>
-        <div>
-          <h2>Dashboard Coming Soon</h2>
-          <p>Your investment tracking dashboard will be implemented here.</p>
-          <p>Role: {session.user.role}</p>
-        </div>
-      </main>
-    </div>
+    <div className="flex flex-col gap-4">
+      <Title>Olá, {user.name?.split(' ').slice(0, -1).join(' ') || user.name?.split(' ')[0]}</Title>
+      <Controls />
+    </div >
   )
 }
