@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, createErrorResponse } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -31,5 +31,5 @@ export const DELETE = withAuth(async (request, session) => {
     where: { id: BigInt(accountId) }
   })
 
-  return Response.json({ success: true })
+  return NextResponse.json({ success: true })
 })

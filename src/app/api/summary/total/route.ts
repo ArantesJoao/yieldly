@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { withAuth } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
 import { summaryQuerySchema } from "@/lib/validations"
@@ -6,7 +6,7 @@ import { getTotalSummary } from "@/lib/summary"
 
 export const GET = withAuth(async (request, session) => {
   const { searchParams } = new URL(request.url)
-  
+
   const queryData = summaryQuerySchema.parse({
     from: searchParams.get('from'),
     to: searchParams.get('to')
@@ -23,5 +23,5 @@ export const GET = withAuth(async (request, session) => {
     queryData.to
   )
 
-  return Response.json(summary)
+  return NextResponse.json(summary)
 })

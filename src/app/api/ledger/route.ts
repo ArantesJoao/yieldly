@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, parseJsonBody, createErrorResponse } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -7,7 +7,7 @@ import { updateDailyAccountSummary } from "@/lib/summary"
 
 export const GET = withAuth(async (request, session) => {
   const { searchParams } = new URL(request.url)
-  
+
   const queryData = ledgerQuerySchema.parse({
     accountId: searchParams.get('accountId'),
     from: searchParams.get('from'),
@@ -30,7 +30,16 @@ export const GET = withAuth(async (request, session) => {
     resourceOwnerId: account.ownerUserId.toString()
   })
 
-  const where: any = {
+  interface LedgerWhereClause {
+    accountId: bigint
+    date: {
+      gte: Date
+      lte: Date
+    }
+    increaseTypeId?: bigint
+  }
+
+  const where: LedgerWhereClause = {
     accountId: queryData.accountId,
     date: {
       gte: convertDateToUTC(queryData.from),
@@ -65,7 +74,7 @@ export const GET = withAuth(async (request, session) => {
     }
   }))
 
-  return Response.json(serializedEntries)
+  return NextResponse.json(serializedEntries)
 })
 
 export const POST = withAuth(async (request, session) => {
@@ -134,5 +143,5 @@ export const POST = withAuth(async (request, session) => {
     }
   }
 
-  return Response.json(serializedEntry, { status: 201 })
+  return NextResponse.json(serializedEntry, { status: 201 })
 })

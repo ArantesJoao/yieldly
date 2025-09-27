@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, parseJsonBody, createErrorResponse } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -78,7 +78,7 @@ export const POST = withAuth(async (request, session) => {
   // Wait for all summary updates to complete
   await Promise.all(summaryUpdates)
 
-  return Response.json({ 
+  return NextResponse.json({
     inserted: daysDiff,
     entries: entries.map(entry => ({
       ...entry,

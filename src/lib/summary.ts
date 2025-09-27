@@ -25,7 +25,7 @@ export async function updateDailyAccountSummary(accountId: bigint, date: Date) {
   // Get previous day's balance
   const previousDay = new Date(date)
   previousDay.setUTCDate(previousDay.getUTCDate() - 1)
-  
+
   const previousSummary = await db.dailyAccountSummary.findUnique({
     where: {
       accountId_date: {
@@ -110,8 +110,8 @@ async function getCurrentBalance(accountId: bigint, date: Date): Promise<number>
 }
 
 export async function getAccountSummary(
-  accountId: bigint, 
-  fromDate: string, 
+  accountId: bigint,
+  fromDate: string,
   toDate: string
 ) {
   const from = convertDateToUTC(fromDate)
@@ -140,7 +140,7 @@ export async function getAccountSummary(
 
 export async function getTotalSummary(
   userId: bigint,
-  fromDate: string, 
+  fromDate: string,
   toDate: string
 ) {
   const from = convertDateToUTC(fromDate)
@@ -162,10 +162,17 @@ export async function getTotalSummary(
     }
   })
 
+  interface DailySummary {
+    date: string
+    balanceEndMinor: number
+    yieldsMinor: number
+    contributionsMinor: number
+  }
+
   // Group by date and sum across accounts
   const dateGroups = summaries.reduce((acc, summary) => {
     const dateKey = summary.date.toISOString().split('T')[0]
-    
+
     if (!acc[dateKey]) {
       acc[dateKey] = {
         date: dateKey,
@@ -174,13 +181,13 @@ export async function getTotalSummary(
         contributionsMinor: 0
       }
     }
-    
+
     acc[dateKey].balanceEndMinor += summary.balanceEndMinor
     acc[dateKey].yieldsMinor += summary.yieldsMinor
     acc[dateKey].contributionsMinor += summary.contributionsMinor
-    
-    return acc
-  }, {} as Record<string, any>)
 
-  return Object.values(dateGroups).sort((a: any, b: any) => a.date.localeCompare(b.date))
+    return acc
+  }, {} as Record<string, DailySummary>)
+
+  return Object.values(dateGroups).sort((a: DailySummary, b: DailySummary) => a.date.localeCompare(b.date))
 }

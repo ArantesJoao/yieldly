@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, parseJsonBody } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -25,7 +25,7 @@ export const GET = withAuth(async (request, session) => {
     ownerUserId: type.ownerUserId.toString()
   }))
 
-  return Response.json(serializedTypes)
+  return NextResponse.json(serializedTypes)
 })
 
 export const POST = withAuth(async (request, session) => {
@@ -50,5 +50,5 @@ export const POST = withAuth(async (request, session) => {
     ownerUserId: increaseType.ownerUserId.toString()
   }
 
-  return Response.json(serializedType, { status: 201 })
+  return NextResponse.json(serializedType, { status: 201 })
 })

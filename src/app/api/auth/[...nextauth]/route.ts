@@ -2,6 +2,8 @@ import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import { db } from "@/lib/db"
 import { Role } from "@prisma/client"
+import type { JWT } from "next-auth/jwt"
+import type { DefaultSession } from "next-auth"
 
 export const authOptions = {
   providers: [
@@ -11,11 +13,11 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account, profile }: any) {
-      if (account && profile) {
+    async jwt({ token, account, profile }: { token: JWT; account?: { provider: string } | null; profile?: { email?: string } | null }) {
+      if (account && profile && profile.email) {
         // Find or create user in database
         let user = await db.user.findUnique({
-          where: { email: profile.email! }
+          where: { email: profile.email }
         })
 
         if (!user) {
@@ -24,7 +26,7 @@ export const authOptions = {
 
           user = await db.user.create({
             data: {
-              email: profile.email!,
+              email: profile.email,
               role: isAdmin ? Role.admin : Role.member,
             }
           })
@@ -50,10 +52,10 @@ export const authOptions = {
 
       return token
     },
-    async session({ session, token }: any) {
-      if (token) {
-        session.user.id = token.id
-        session.user.role = token.role
+    async session({ session, token }: { session: DefaultSession; token: JWT }) {
+      if (token.id && token.role && session.user) {
+        (session.user as { id?: string; role?: Role }).id = token.id;
+        (session.user as { id?: string; role?: Role }).role = token.role
       }
       return session
     }

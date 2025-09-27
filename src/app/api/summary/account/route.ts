@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, createErrorResponse } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -7,7 +7,7 @@ import { getAccountSummary } from "@/lib/summary"
 
 export const GET = withAuth(async (request, session) => {
   const { searchParams } = new URL(request.url)
-  
+
   const queryData = accountSummaryQuerySchema.parse({
     accountId: searchParams.get('accountId'),
     from: searchParams.get('from'),
@@ -35,5 +35,5 @@ export const GET = withAuth(async (request, session) => {
     queryData.to
   )
 
-  return Response.json(summary)
+  return NextResponse.json(summary)
 })

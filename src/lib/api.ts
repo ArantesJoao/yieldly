@@ -2,11 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { ZodError } from "zod"
-
-export type ApiError = {
-  error: string
-  message: string
-}
+import type { ApiError, ApiHandler, AuthenticatedSession } from "@/types/api"
 
 export function createErrorResponse(error: string, message: string, status: number = 400): NextResponse<ApiError> {
   return NextResponse.json({ error, message }, { status })
@@ -17,10 +13,10 @@ export function handleValidationError(error: ZodError): NextResponse<ApiError> {
   return createErrorResponse('validation-error', message, 422)
 }
 
-export async function withAuth<T>(
-  handler: (request: NextRequest, session: any) => Promise<NextResponse<T>>
+export async function withAuth<T = unknown>(
+  handler: ApiHandler<T>
 ) {
-  return async (request: NextRequest) => {
+  return async (request: NextRequest): Promise<NextResponse<T | ApiError>> => {
     try {
       const session = await getServerSession(authOptions)
 
@@ -28,7 +24,10 @@ export async function withAuth<T>(
         return createErrorResponse('unauthenticated', 'Authentication required', 401)
       }
 
-      return await handler(request, session)
+      // Type assertion to ensure we have the authenticated session structure
+      const authenticatedSession = session as AuthenticatedSession
+
+      return await handler(request, authenticatedSession)
     } catch (error) {
       console.error('API Error:', error)
 

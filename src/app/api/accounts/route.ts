@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, parseJsonBody, createErrorResponse } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
@@ -27,7 +27,7 @@ export const GET = withAuth(async (request, session) => {
     ownerUserId: account.ownerUserId.toString()
   }))
 
-  return Response.json(serializedAccounts)
+  return NextResponse.json(serializedAccounts)
 })
 
 export const POST = withAuth(async (request, session) => {
@@ -49,7 +49,7 @@ export const POST = withAuth(async (request, session) => {
 
   // Handle initial balance if provided
   if (validatedData.initialBalanceMinor && validatedData.initialBalanceMinor > 0) {
-    const startDate = validatedData.startDate 
+    const startDate = validatedData.startDate
       ? convertDateToUTC(validatedData.startDate)
       : new Date()
 
@@ -86,5 +86,5 @@ export const POST = withAuth(async (request, session) => {
     ownerUserId: account.ownerUserId.toString()
   }
 
-  return Response.json(serializedAccount, { status: 201 })
+  return NextResponse.json(serializedAccount, { status: 201 })
 })
