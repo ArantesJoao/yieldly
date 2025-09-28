@@ -1,3 +1,5 @@
+import { Button } from "../ui/button"
+
 interface NavItem {
   id: string
   label: string
@@ -82,17 +84,15 @@ export function MobileMenu({
 
           <nav className="relative space-y-2" role="navigation" aria-label="Mobile navigation">
             {navItems.map((item) => (
-              <button
+              <Button
                 key={item.id}
                 onClick={() => handleNavigate(item.id)}
-                className="w-full text-left px-4 py-3 rounded-xl font-medium transition-all duration-300 border text-muted-foreground hover:text-foreground hover:bg-gradient-to-r hover:from-secondary/80 hover:to-primary/10 border-border/30 hover:border-primary/40"
+                className="w-full"
+                variant="secondary"
                 tabIndex={0}
               >
-                <span className="flex items-center gap-3">
-                  <span className="w-2 h-2 rounded-full bg-gradient-to-br from-primary/80 to-primary/40 shadow-sm shadow-primary/20" />
-                  {item.fullLabel}
-                </span>
-              </button>
+                {item.fullLabel}
+              </Button>
             ))}
           </nav>
         </div>

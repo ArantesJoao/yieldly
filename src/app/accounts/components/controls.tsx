@@ -2,7 +2,7 @@ import NewAccountButton from "./newAccountButton"
 
 const Controls = () => {
   return (
-    <div>
+    <div className="w-full">
       <NewAccountButton />
     </div>
   )

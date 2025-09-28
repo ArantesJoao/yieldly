@@ -1,26 +1,28 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
+
 import Logo from "./logo"
-import { HamburgerButton } from "./hamburger-button"
-import { MobileMenu } from "./mobile-menu"
 import { Button } from "../ui/button"
+import { MobileMenu } from "./mobile-menu"
+import { HamburgerButton } from "./hamburger-button"
 
 export default function Navbar() {
   const { data: session } = useSession()
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const router = useRouter()
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", fullLabel: "Dashboard" },
     { id: "accounts", label: "Accounts", fullLabel: "Accounts" },
-    { id: "ledger", label: "Ledger", fullLabel: "Ledger" },
     { id: "settings", label: "Settings", fullLabel: "Settings" },
   ]
 
   const handleNavigate = (itemId: string) => {
-    console.log(`Clicked: ${itemId}`)
+    router.push(itemId)
   }
 
   const handleLogin = () => {
@@ -50,7 +52,7 @@ export default function Navbar() {
               onClick={handleLogin}
               onMouseEnter={() => setHoveredItem("login")}
               onMouseLeave={() => setHoveredItem(null)}
-              // variant="backdrop"
+              className="h-8 lg:h-10"
               tabIndex={0}
             >
               Login

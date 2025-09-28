@@ -1,15 +1,15 @@
 'use client'
 
-import { Title } from "@/components/ui/title"
-import Controls from "./components/controls"
-import { useSession, signOut } from "next-auth/react"
-import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { useSession } from "next-auth/react"
+
+import { Title } from "@/components/ui/title"
 
 export default function DashboardPage() {
+  const router = useRouter()
   const { data: session, status } = useSession()
   const user = session?.user
-  const router = useRouter()
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -32,7 +32,6 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-4">
       <Title>Olá, {user.name?.split(' ').slice(0, -1).join(' ') || user.name?.split(' ')[0]}</Title>
-      <Controls />
     </div >
   )
 }
