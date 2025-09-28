@@ -98,8 +98,8 @@
   --accent: var(--color-linen-200);
   --accent-foreground: var(--color-brand-800);
   --destructive: #DC2626; /* red-600 */
-  --border: var(--color-linen-300);
-  --input: var(--color-linen-300);
+  --border: var(--color-brand);
+  --input: var(--color-brand);
   --ring: var(--color-brand-500);
 
   /* Charts & sidebar (light) */

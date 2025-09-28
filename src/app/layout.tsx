@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 
 import "./globals.css";
-import { Providers } from "./providers";
 import Navbar from "@/components/navbar";
+import { Providers } from "./providers";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",

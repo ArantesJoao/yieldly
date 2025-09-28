@@ -13,3 +13,8 @@ export const getAccounts = async () => {
   const response = await fetch("/api/accounts")
   return response.json()
 }
+
+export const getAccountById = async (id: string) => {
+  const response = await fetch(`/api/accounts/${id}`)
+  return response.json()
+}
