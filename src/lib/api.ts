@@ -9,11 +9,11 @@ export function createErrorResponse(error: string, message: string, status: numb
 }
 
 export function handleValidationError(error: ZodError): NextResponse<ApiError> {
-  const message = error.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
+  const message = error.issues.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')
   return createErrorResponse('validation-error', message, 422)
 }
 
-export async function withAuth<T = unknown>(
+export function withAuth<T = unknown>(
   handler: ApiHandler<T>
 ) {
   return async (request: NextRequest): Promise<NextResponse<T | ApiError>> => {

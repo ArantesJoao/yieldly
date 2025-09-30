@@ -27,7 +27,7 @@ The application uses NextAuth v5 with JWT sessions for authentication.
 DATABASE_URL="postgresql://username:password@localhost:5432/yieldly"
 
 # NextAuth
-NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3001"
 NEXTAUTH_SECRET="your-secret-key-here"
 
 # Admin Configuration

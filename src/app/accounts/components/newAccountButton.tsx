@@ -3,42 +3,27 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useCreateAccount } from "@/services/accounts/mutations"
 import CreateAccountForm from "./createAccountForm"
+import { useState } from "react"
 
 const NewAccountButton = () => {
-  const { mutate: createAccount } = useCreateAccount()
+  const [open, setOpen] = useState(false)
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button >+ Create Account</Button>
+        <Button className="w-full">+ Create Account</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create Account</DialogTitle>
-          <DialogDescription>
-            Create a new account here. Click save when you&apos;re
-            done.
-          </DialogDescription>
         </DialogHeader>
-        <CreateAccountForm />
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Close</Button>
-          </DialogClose>
-          <Button type="submit">Create Account</Button>
-        </DialogFooter>
+        <CreateAccountForm toggleDialog={() => setOpen(!open)} />
       </DialogContent>
     </Dialog>
   )

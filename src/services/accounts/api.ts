@@ -1,20 +1,17 @@
-import { Account } from "@prisma/client"
+import { httpClient } from "@/lib/httpClient"
+import { CreateAccountData } from "@/types/api"
 
-export const createAccount = async (account: Account) => {
-  const response = await fetch("/api/accounts", {
-    method: "POST",
-    body: JSON.stringify(account),
-  })
-
-  return response.json()
+export const createAccount = async (account: CreateAccountData) => {
+  const response = await httpClient.post("/api/accounts", account)
+  return response.data
 }
 
 export const getAccounts = async () => {
-  const response = await fetch("/api/accounts")
-  return response.json()
+  const response = await httpClient.get("/api/accounts")
+  return response.data
 }
 
 export const getAccountById = async (id: string) => {
-  const response = await fetch(`/api/accounts/${id}`)
-  return response.json()
+  const response = await httpClient.get(`/api/accounts/${id}`)
+  return response.data
 }

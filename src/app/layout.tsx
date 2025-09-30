@@ -4,6 +4,7 @@ import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import { Providers } from "./providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -13,6 +14,9 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "Yieldly",
   description: "Personal Investment Tracker",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +29,7 @@ export default function RootLayout({
       <body
         className={`${openSans.variable} mt-24 antialiased m-4.5`}
       >
+        <Toaster />
         <Providers>
           <Navbar />
           {children}

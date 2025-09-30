@@ -1,34 +1,57 @@
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useIsMutating } from '@tanstack/react-query';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { DialogClose } from '@/components/ui/dialog';
+import { useCreateAccount } from '@/services/accounts/mutations';
+import { convertToMinor } from '@/utils/conversions';
+import { Spinner } from '@/components/ui/shadcn-io/spinner';
+
+interface CreateAccountFormProps {
+  toggleDialog: () => void
+}
 
 const accountSchema = z.object({
-  institution: z.string(),
-  label: z.string(),
-  initialBalanceMinor: z.number().optional(),
+  institution: z.string().min(1, "Institution is required"),
+  label: z.string().min(1, "Account name is required"),
+  initialBalance: z.number().multipleOf(0.01, "Inform a valid initial balance or leave it empty").nullable(),
 });
 
-const CreateAccountForm = () => {
+const CreateAccountForm = ({ toggleDialog }: CreateAccountFormProps) => {
+  const { mutateAsync: createAccount } = useCreateAccount()
+  const isMutating = useIsMutating({ mutationKey: ['createAccount'] }) > 0
+
   const form = useForm<z.infer<typeof accountSchema>>({
     resolver: zodResolver(accountSchema),
     defaultValues: {
       institution: "",
       label: "",
-      initialBalanceMinor: 0,
+      initialBalance: null,
     },
   })
 
-  function onSubmit(values: z.infer<typeof accountSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof accountSchema>) {
+    const initialBalanceMinor =
+      values.initialBalance !== null ? convertToMinor(values.initialBalance) : undefined
+
+    await createAccount({
+      institution: values.institution,
+      label: values.label,
+      initialBalanceMinor,
+    }, {
+      onSuccess: () => {
+        toggleDialog()
+      }
+    })
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-1">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="institution"
@@ -57,16 +80,17 @@ const CreateAccountForm = () => {
         />
         <FormField
           control={form.control}
-          name="initialBalanceMinor"
+          name="initialBalance"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Initial Balance</FormLabel>
               <FormControl>
                 <Input
                   placeholder="1000"
-                  {...field}
                   type="number"
-                  onChange={(e) => field.onChange(e.target.value === '' ? undefined : Number(e.target.value))}
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(e) => field.onChange(e.target.value === '' ? null : parseFloat(e.target.value))}
                 />
               </FormControl>
               <FormMessage />
@@ -74,8 +98,10 @@ const CreateAccountForm = () => {
           )}
         />
         <div className="flex w-full justify-end gap-2 mt-4">
-          <Button variant="outline" type="button">Cancel</Button>
-          <Button type="submit">Create Account</Button>
+          <DialogClose asChild>
+            <Button variant="outline">Close</Button>
+          </DialogClose>
+          <Button type="submit" disabled={isMutating} className='w-40'>{isMutating ? <Spinner /> : 'Create Account'}</Button>
         </div>
       </form>
     </Form>

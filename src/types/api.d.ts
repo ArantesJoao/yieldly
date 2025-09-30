@@ -20,3 +20,10 @@ export interface AuthenticatedSession extends Session {
     image?: string
   }
 }
+
+export interface CreateAccountData {
+  institution: string
+  label: string
+  initialBalanceMinor?: number
+  startDate?: string
+}
