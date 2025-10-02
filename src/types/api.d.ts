@@ -27,3 +27,12 @@ export interface CreateAccountData {
   initialBalanceMinor?: number
   startDate?: string
 }
+
+export interface Account {
+  id: string
+  ownerUserId: string
+  institution: string
+  label: string
+  currentBalanceMinor: number
+  createdAt: Date
+}

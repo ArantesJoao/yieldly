@@ -20,8 +20,30 @@ export const GET = withAuth(async (request, session) => {
     }
   })
 
+  // Get the most recent balance for each account
+  const accountsWithBalance = await Promise.all(
+    accounts.map(async (account) => {
+      const latestSummary = await db.dailyAccountSummary.findFirst({
+        where: {
+          accountId: account.id
+        },
+        orderBy: {
+          date: 'desc'
+        },
+        select: {
+          balanceEndMinor: true
+        }
+      })
+
+      return {
+        ...account,
+        currentBalanceMinor: latestSummary?.balanceEndMinor || 0
+      }
+    })
+  )
+
   // Convert BigInt IDs to strings for JSON serialization
-  const serializedAccounts = accounts.map(account => ({
+  const serializedAccounts = accountsWithBalance.map(account => ({
     ...account,
     id: account.id.toString(),
     ownerUserId: account.ownerUserId.toString()
@@ -46,6 +68,8 @@ export const POST = withAuth(async (request, session) => {
       label: validatedData.label
     }
   })
+
+  let currentBalanceMinor = 0
 
   // Handle initial balance if provided
   if (validatedData.initialBalanceMinor && validatedData.initialBalanceMinor > 0) {
@@ -78,12 +102,15 @@ export const POST = withAuth(async (request, session) => {
 
     // Update daily summary
     await updateDailyAccountSummary(account.id, startDate)
+
+    currentBalanceMinor = validatedData.initialBalanceMinor
   }
 
   const serializedAccount = {
     ...account,
     id: account.id.toString(),
-    ownerUserId: account.ownerUserId.toString()
+    ownerUserId: account.ownerUserId.toString(),
+    currentBalanceMinor
   }
 
   return NextResponse.json(serializedAccount, { status: 201 })

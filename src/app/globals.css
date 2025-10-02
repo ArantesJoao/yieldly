@@ -37,6 +37,8 @@
   --color-linen-900: #3A2D16;
   --color-linen-950: #23190C;
   --color-linen: #F9F1DF;
+
+  --default-bg: #F2F2F2;
 }
 
 @theme inline {
@@ -83,7 +85,7 @@
   --radius: 0.625rem;
 
   /* Light mode mapped to linen surfaces + brand ink */
-  --background: var(--color-linen-50);
+  --background: var(--default-bg);
   --foreground: var(--color-brand-900);
   --card: var(--color-linen-100);
   --card-foreground: var(--color-brand-900);
@@ -116,6 +118,8 @@
   --sidebar-accent-foreground: var(--color-brand-800);
   --sidebar-border: var(--color-linen-200);
   --sidebar-ring: var(--color-brand-500);
+
+  overscroll-behavior: none;
 }
 
 .dark {

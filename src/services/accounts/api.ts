@@ -1,17 +1,17 @@
 import { httpClient } from "@/lib/httpClient"
-import { CreateAccountData } from "@/types/api"
+import { CreateAccountData, Account } from "@/types/api"
 
-export const createAccount = async (account: CreateAccountData) => {
-  const response = await httpClient.post("/api/accounts", account)
+export const createAccount = async (account: CreateAccountData): Promise<Account> => {
+  const response = await httpClient.post<Account>("/api/accounts", account)
   return response.data
 }
 
-export const getAccounts = async () => {
-  const response = await httpClient.get("/api/accounts")
+export const getAccounts = async (): Promise<Account[]> => {
+  const response = await httpClient.get<Account[]>("/api/accounts")
   return response.data
 }
 
-export const getAccountById = async (id: string) => {
-  const response = await httpClient.get(`/api/accounts/${id}`)
+export const getAccountById = async (id: string): Promise<Account> => {
+  const response = await httpClient.get<Account>(`/api/accounts/${id}`)
   return response.data
 }

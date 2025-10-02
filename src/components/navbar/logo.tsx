@@ -31,7 +31,7 @@ export default function Logo({ isHovered, onClick, onMouseEnter, onMouseLeave }:
       tabIndex={0}
     >
       <div className="w-8 h-8 lg:w-10 lg:h-10 bg-primary rounded-lg flex items-center justify-center">
-        <Image src="/logo-linen.svg" alt="Yieldly" fill className="object-cover p-1.5" />
+        <Image src="/brand-logos/logo-linen.svg" alt="Yieldly" fill className="object-cover p-1.5" />
       </div>
     </button>
   )
