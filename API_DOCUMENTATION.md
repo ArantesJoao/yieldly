@@ -107,15 +107,17 @@ The database uses PostgreSQL with the following main entities:
 
 - **User**: Authentication and user preferences
 - **Account**: Investment accounts grouped by institution
-- **IncreaseType**: User-defined categories (seeded with "Contribution" and "Yields")
+- **IncreaseType**: User-defined categories (seeded with "Deposit" and "Yields")
 - **LedgerEntry**: Individual balance movements
 - **DailyAccountSummary**: Pre-aggregated daily summaries for fast queries
 
 ### Auto-Seeding
 
-When a user first logs in, the system automatically creates:
-- "Contribution" increase type
-- "Yields" increase type
+When a user first logs in, the system automatically creates two default increase types:
+- **"Deposit"** - for deposits and initial balances
+- **"Yields"** - for investment yields
+
+These default types cannot be deleted but users can create additional custom types via the API.
 
 ## API Endpoints
 
@@ -160,7 +162,7 @@ Creates a new account.
 **Response:** Created account object with 201 status.
 
 **Behavior:**
-- If `initialBalanceMinor` is provided, creates a LedgerEntry with IncreaseType="Contribution"
+- If `initialBalanceMinor` is provided, creates a LedgerEntry with IncreaseType="Deposit" and note="Initial balance"
 - Updates DailyAccountSummary for the affected date
 - Members limited to 1 account total
 
@@ -187,7 +189,7 @@ Returns all increase types for the authenticated user.
   {
     "id": "1",
     "ownerUserId": "1",
-    "name": "Contribution"
+    "name": "Deposit"
   },
   {
     "id": "2", 
@@ -209,8 +211,16 @@ Creates a new increase type.
 
 **Response:** Created increase type with 201 status.
 
+**Behavior:**
+- Name must be unique per user (enforced by database constraint)
+- Cannot create types named "Deposit" or "Yields" if they already exist
+
 #### `DELETE /api/increase-types/{id}`
 Deletes an increase type (admin or owner only).
+
+**Restrictions:**
+- Cannot delete default types: "Deposit" and "Yields"
+- Returns 400 error if attempting to delete a default type
 
 ---
 

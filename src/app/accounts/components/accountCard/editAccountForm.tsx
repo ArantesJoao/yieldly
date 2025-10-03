@@ -1,3 +1,5 @@
+"use client"
+
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,11 +9,12 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { useCreateAccount } from '@/services/accounts/mutations'
-import { convertToMinor } from '@/utils/conversions'
+import { useUpdateAccount } from '@/services/accounts/mutations'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
+import { Account } from '@/types/api'
 
-interface CreateAccountFormProps {
+interface EditAccountFormProps {
+  account: Account
   onClose: () => void
   className?: string
 }
@@ -19,30 +22,24 @@ interface CreateAccountFormProps {
 const accountSchema = z.object({
   institution: z.string().min(1, "Institution is required"),
   label: z.string().min(1, "Account name is required"),
-  initialBalance: z.number().multipleOf(0.01, "Inform a valid initial balance or leave it empty").nullable(),
 })
 
-const CreateAccountForm = ({ onClose, className }: CreateAccountFormProps) => {
-  const { mutateAsync: createAccount } = useCreateAccount()
-  const isMutating = useIsMutating({ mutationKey: ['createAccount'] }) > 0
+const EditAccountForm = ({ account, onClose, className }: EditAccountFormProps) => {
+  const { mutateAsync: updateAccount } = useUpdateAccount()
+  const isMutating = useIsMutating({ mutationKey: ['updateAccount'] }) > 0
 
   const form = useForm<z.infer<typeof accountSchema>>({
     resolver: zodResolver(accountSchema),
     defaultValues: {
-      institution: "",
-      label: "",
-      initialBalance: null,
+      institution: account.institution,
+      label: account.label,
     },
   })
 
   async function onSubmit(values: z.infer<typeof accountSchema>) {
-    const initialBalanceMinor =
-      values.initialBalance !== null ? convertToMinor(values.initialBalance) : undefined
-
-    await createAccount({
-      institution: values.institution,
-      label: values.label,
-      initialBalanceMinor,
+    await updateAccount({
+      id: account.id,
+      data: values
     }, {
       onSuccess: () => {
         onClose()
@@ -79,31 +76,13 @@ const CreateAccountForm = ({ onClose, className }: CreateAccountFormProps) => {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="initialBalance"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Initial Balance</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="1000"
-                  type="number"
-                  {...field}
-                  value={field.value ?? ''}
-                  onChange={(e) => field.onChange(e.target.value === '' ? null : parseFloat(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <Button type="submit" disabled={isMutating} className='w-full'>
-          {isMutating ? <Spinner /> : 'Create Account'}
+          {isMutating ? <Spinner /> : 'Update Account'}
         </Button>
       </form>
     </Form>
   )
 }
 
-export default CreateAccountForm
+export default EditAccountForm
+

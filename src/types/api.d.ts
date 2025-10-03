@@ -28,6 +28,11 @@ export interface CreateAccountData {
   startDate?: string
 }
 
+export interface UpdateAccountData {
+  institution?: string
+  label?: string
+}
+
 export interface Account {
   id: string
   ownerUserId: string

@@ -31,12 +31,12 @@ export const authOptions = {
             }
           })
 
-          // Seed increase types for new users
+          // Seed default increase types for new users
           await db.increaseType.createMany({
             data: [
               {
                 ownerUserId: user.id,
-                name: "Contribution"
+                name: "Deposit"
               },
               {
                 ownerUserId: user.id,

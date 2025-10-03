@@ -27,7 +27,7 @@ const AccountsCarousel = () => {
     })
   }, [api, current, setCurrent])
 
-  if (isLoading) {
+  if (isLoading && !accounts) {
     // TODO: Add skeleton
     return <div>Loading...</div>
   }

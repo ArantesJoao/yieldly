@@ -7,14 +7,16 @@ import { Account } from "@/types/api"
 import { formatCurrency } from "@/utils/conversions"
 import { getInstitutionLogoPath, getInstitutionColors } from "@/utils/institutionData"
 import DepositButton from "./depositButton"
+import AccountControls from "./accountControls"
 
 interface AccountCardProps {
   account: Account
   className?: string
   showActions?: boolean
+  showControls?: boolean
 }
 
-const AccountCard = ({ account, className, showActions = false }: AccountCardProps) => {
+const AccountCard = ({ account, className, showActions = false, showControls = false }: AccountCardProps) => {
   const backgroundColor = getInstitutionColors(account.institution ?? "")
   const institutionLogo = getInstitutionLogoPath(account.institution ?? "")
 
@@ -68,6 +70,11 @@ const AccountCard = ({ account, className, showActions = false }: AccountCardPro
             label={account.label}
             currentBalanceMinor={account.currentBalanceMinor ?? 0}
           />
+        )}
+        {showControls && (
+          <div className="relative flex items-end z-10">
+            <AccountControls account={account} />
+          </div>
         )}
       </div>
 

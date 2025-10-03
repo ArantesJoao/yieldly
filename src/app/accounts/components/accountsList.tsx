@@ -12,7 +12,7 @@ interface AccountsListProps {
 const AccountsList = ({ className }: AccountsListProps) => {
   const { data: accounts, isLoading, isError } = useAccounts()
 
-  if (isLoading) {
+  if (isLoading && !accounts) {
     return <div>Loading...</div>
   }
 
@@ -23,7 +23,7 @@ const AccountsList = ({ className }: AccountsListProps) => {
   return (
     <div className={cn("flex flex-col w-full gap-1 py-3 max-w-md md:max-w-full mx-auto", className)}>
       {accounts?.map((account) => (
-        <AccountCard key={account.id} account={account} />
+        <AccountCard key={account.id} account={account} showControls />
       ))}
     </div>
   )

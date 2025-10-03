@@ -26,6 +26,12 @@ export const DELETE = withAuth(async (request, session) => {
     resourceOwnerId: increaseType.ownerUserId.toString()
   })
 
+  // Prevent deletion of default increase types
+  const defaultTypes = ['Deposit', 'Yields']
+  if (defaultTypes.includes(increaseType.name)) {
+    return createErrorResponse('cannot-delete-default', `Cannot delete default increase type: ${increaseType.name}`, 400)
+  }
+
   // Delete increase type
   await db.increaseType.delete({
     where: { id: BigInt(increaseTypeId) }
