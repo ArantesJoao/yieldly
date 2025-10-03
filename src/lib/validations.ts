@@ -56,8 +56,9 @@ export const accountSummaryQuerySchema = summaryQuerySchema.extend({
 
 // Utility functions
 export function convertDateToUTC(dateString: string): Date {
-  // Convert YYYY-MM-DD to UTC midnight
-  return new Date(`${dateString}T00:00:00.000Z`)
+  // Convert YYYY-MM-DD to UTC noon (12:00) to avoid timezone issues
+  // This ensures the date stays correct regardless of user timezone
+  return new Date(`${dateString}T12:00:00.000Z`)
 }
 
 export function formatDateToString(date: Date): string {

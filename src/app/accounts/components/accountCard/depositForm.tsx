@@ -20,6 +20,7 @@ import { useIncreaseTypes } from '@/services/increase-types/queries'
 import { convertToMinor, formatCurrency } from '@/utils/conversions'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
 import { useMemo } from 'react'
+import { useAppDate } from '@/app/providers/appDateProvider'
 
 interface DepositFormProps {
   accountId: string
@@ -37,6 +38,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
   const { mutateAsync: createLedgerEntry } = useCreateLedgerEntry()
   const { data: increaseTypes, isLoading: isLoadingIncreaseTypes } = useIncreaseTypes()
   const isMutating = useIsMutating({ mutationKey: ['createLedgerEntry'] }) > 0
+  const { getCurrentDateString } = useAppDate()
 
   const form = useForm<z.infer<typeof depositSchema>>({
     resolver: zodResolver(depositSchema),
@@ -56,7 +58,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
 
   async function onSubmit(values: z.infer<typeof depositSchema>) {
     const amountMinor = convertToMinor(values.amount)
-    const today = new Date().toISOString().split('T')[0]
+    const today = getCurrentDateString()
 
     await createLedgerEntry({
       accountId,
