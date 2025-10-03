@@ -49,3 +49,12 @@ export interface CreateLedgerEntryData {
   amountMinor: number
   note?: string
 }
+
+export interface SpreadYieldsData {
+  accountId: string
+  increaseTypeId: string
+  totalAmountMinor: number
+  startDate: string
+  endDate: string
+  roundingMode?: "lastDayGetsRemainder"
+}
