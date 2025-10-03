@@ -7,8 +7,6 @@ interface DotsProps {
 }
 
 const Dots = ({ amount, current, onClick }: DotsProps) => {
-
-  console.log(amount, current)
   return (
     <div className="flex justify-center gap-2 mt-3">
       {Array.from({ length: amount }).map((_, index) => (

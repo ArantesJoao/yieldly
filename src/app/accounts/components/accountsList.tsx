@@ -3,20 +3,20 @@
 import { useAccounts } from "@/services/accounts/queries"
 
 import { cn } from "@/lib/utils"
-import AccountCard from "./accountCard"
+import AccountCard from "./accountCard/accountCard"
 
 interface AccountsListProps {
   className?: string
 }
 
 const AccountsList = ({ className }: AccountsListProps) => {
-  const { data: accounts, isFetching, isError } = useAccounts()
+  const { data: accounts, isLoading, isError } = useAccounts()
 
-  if (isFetching) {
+  if (isLoading) {
     return <div>Loading...</div>
   }
 
-  if (isError && !isFetching) {
+  if (isError) {
     return <div>Error loading accounts</div>
   }
 

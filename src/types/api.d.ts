@@ -36,3 +36,11 @@ export interface Account {
   currentBalanceMinor: number
   createdAt: Date
 }
+
+export interface CreateLedgerEntryData {
+  accountId: string
+  date: string
+  increaseTypeId: string
+  amountMinor: number
+  note?: string
+}

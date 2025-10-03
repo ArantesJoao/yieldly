@@ -6,13 +6,15 @@ import { cn } from "@/lib/utils"
 import { Account } from "@/types/api"
 import { formatCurrency } from "@/utils/conversions"
 import { getInstitutionLogoPath, getInstitutionColors } from "@/utils/institutionData"
+import DepositButton from "./depositButton"
 
 interface AccountCardProps {
   account: Account
   className?: string
+  showActions?: boolean
 }
 
-const AccountCard = ({ account, className }: AccountCardProps) => {
+const AccountCard = ({ account, className, showActions = false }: AccountCardProps) => {
   const backgroundColor = getInstitutionColors(account.institution ?? "")
   const institutionLogo = getInstitutionLogoPath(account.institution ?? "")
 
@@ -53,12 +55,23 @@ const AccountCard = ({ account, className }: AccountCardProps) => {
         )}
       </div>
 
-      <div className="relative mt-4">
-        <div className="text-sm/5 opacity-90">Balance</div>
-        <div className="mt-0.5 text-2xl font-bold tabular-nums">
-          {formatCurrency(account.currentBalanceMinor ?? 0, "BRL")}
+      <div className="relative flex justify-between mt-4">
+        <div className="flex flex-col gap-0.5">
+          <div className="text-sm/5 opacity-90">Balance</div>
+          <div className="text-2xl font-bold tabular-nums">
+            {formatCurrency(account.currentBalanceMinor ?? 0, "BRL")}
+          </div>
         </div>
+        {showActions && (
+          <DepositButton
+            accountId={account.id}
+            label={account.label}
+            currentBalanceMinor={account.currentBalanceMinor ?? 0}
+          />
+        )}
       </div>
+
+
     </div>
   )
 }

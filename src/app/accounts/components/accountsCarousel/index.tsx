@@ -6,12 +6,12 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import AccountCard from "../accountCard"
+import AccountCard from "../accountCard/accountCard"
 import { useAccounts } from "@/services/accounts/queries"
 import Dots from "./dots"
 
 const AccountsCarousel = () => {
-  const { data: accounts, isFetching, isError } = useAccounts()
+  const { data: accounts, isLoading, isError } = useAccounts()
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
 
@@ -27,11 +27,13 @@ const AccountsCarousel = () => {
     })
   }, [api, current, setCurrent])
 
-  if (isFetching) {
+  if (isLoading) {
+    // TODO: Add skeleton
     return <div>Loading...</div>
   }
 
-  if (isError && !isFetching || !accounts) {
+  if (isError || !accounts) {
+    // TODO: Add error state
     return <div>Error loading accounts</div>
   }
 
@@ -42,7 +44,7 @@ const AccountsCarousel = () => {
           <CarouselContent>
             {accounts.map((account, index) => (
               <CarouselItem key={index} className="">
-                <AccountCard account={account} className="h-72" />
+                <AccountCard account={account} className="h-72" showActions />
               </CarouselItem>
             ))}
           </CarouselContent>
