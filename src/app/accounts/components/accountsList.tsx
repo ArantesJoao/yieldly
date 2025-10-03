@@ -1,9 +1,15 @@
 "use client"
 
-import AccountCard from "./accountCard"
 import { useAccounts } from "@/services/accounts/queries"
 
-const AccountsList = () => {
+import { cn } from "@/lib/utils"
+import AccountCard from "./accountCard"
+
+interface AccountsListProps {
+  className?: string
+}
+
+const AccountsList = ({ className }: AccountsListProps) => {
   const { data: accounts, isFetching, isError } = useAccounts()
 
   if (isFetching) {
@@ -15,7 +21,7 @@ const AccountsList = () => {
   }
 
   return (
-    <div className="flex flex-col gap-1 py-3 max-w-md md:max-w-full mx-auto">
+    <div className={cn("flex flex-col w-full gap-1 py-3 max-w-md md:max-w-full mx-auto", className)}>
       {accounts?.map((account) => (
         <AccountCard key={account.id} account={account} />
       ))}

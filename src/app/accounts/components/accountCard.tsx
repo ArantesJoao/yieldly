@@ -19,7 +19,7 @@ const AccountCard = ({ account, className }: AccountCardProps) => {
   return (
     <div
       className={cn(
-        "group relative w-full overflow-hidden rounded-2xl p-5 hover:scale-[1.01] focus-within:scale-[1.01] text-linen-50",
+        "flex flex-col justify-between group relative w-full overflow-hidden rounded-2xl p-5 hover:scale-[1.01] focus-within:scale-[1.01] text-linen-50",
         className
       )}
       style={{ backgroundColor }}
@@ -39,7 +39,7 @@ const AccountCard = ({ account, className }: AccountCardProps) => {
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-sm/5 opacity-90">Conta</div>
+          <div className="text-sm/5 opacity-90">Account</div>
           <div className="truncate text-xl font-semibold tracking-[-0.01em]">
             {account.label}
           </div>
@@ -54,7 +54,7 @@ const AccountCard = ({ account, className }: AccountCardProps) => {
       </div>
 
       <div className="relative mt-4">
-        <div className="text-sm/5 opacity-90">Saldo</div>
+        <div className="text-sm/5 opacity-90">Balance</div>
         <div className="mt-0.5 text-2xl font-bold tabular-nums">
           {formatCurrency(account.currentBalanceMinor ?? 0, "BRL")}
         </div>

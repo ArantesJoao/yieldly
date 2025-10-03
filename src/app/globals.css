@@ -120,6 +120,7 @@
   --sidebar-ring: var(--color-brand-500);
 
   overscroll-behavior: none;
+  overflow-x: hidden !important;
 }
 
 .dark {

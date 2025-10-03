@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
 
 import { Title } from "@/components/ui/title"
+import AccountsCarousel from "../accounts/components/accountsCarousel"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -30,8 +31,9 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <Title>Olá, {user.name?.split(' ').slice(0, -1).join(' ') || user.name?.split(' ')[0]}</Title>
+      <AccountsCarousel />
     </div >
   )
 }
