@@ -3,7 +3,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useIsMutating } from '@tanstack/react-query'
 
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -13,7 +12,6 @@ import { Spinner } from '@/components/ui/shadcn-io/spinner'
 
 interface CreateAccountFormProps {
   onClose: () => void
-  className?: string
 }
 
 const accountSchema = z.object({
@@ -22,7 +20,7 @@ const accountSchema = z.object({
   initialBalance: z.number().multipleOf(0.01, "Inform a valid initial balance or leave it empty").nullable(),
 })
 
-const CreateAccountForm = ({ onClose, className }: CreateAccountFormProps) => {
+const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
   const { mutateAsync: createAccount } = useCreateAccount()
   const isMutating = useIsMutating({ mutationKey: ['createAccount'] }) > 0
 
@@ -52,7 +50,7 @@ const CreateAccountForm = ({ onClose, className }: CreateAccountFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-4", className)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="institution"

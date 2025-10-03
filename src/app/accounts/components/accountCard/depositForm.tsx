@@ -20,13 +20,11 @@ import { useIncreaseTypes } from '@/services/increase-types/queries'
 import { convertToMinor, formatCurrency } from '@/utils/conversions'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
 import { useMemo } from 'react'
-import { cn } from '@/lib/utils'
 
 interface DepositFormProps {
   accountId: string
   currentBalanceMinor: number
   toggleDialog: () => void
-  className?: string
 }
 
 const depositSchema = z.object({
@@ -35,7 +33,7 @@ const depositSchema = z.object({
   note: z.string().max(500, "Note must be less than 500 characters").optional(),
 })
 
-const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog, className }: DepositFormProps) => {
+const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFormProps) => {
   const { mutateAsync: createLedgerEntry } = useCreateLedgerEntry()
   const { data: increaseTypes, isLoading: isLoadingIncreaseTypes } = useIncreaseTypes()
   const isMutating = useIsMutating({ mutationKey: ['createLedgerEntry'] }) > 0
@@ -75,7 +73,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog, className }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-4", className)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="mb-4 p-4 rounded-lg border border-border/50 bg-muted/50 backdrop-blur-sm">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm text-muted-foreground">Current Balance</span>

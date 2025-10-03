@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useIsMutating } from '@tanstack/react-query'
 
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -16,7 +15,6 @@ import { Account } from '@/types/api'
 interface EditAccountFormProps {
   account: Account
   onClose: () => void
-  className?: string
 }
 
 const accountSchema = z.object({
@@ -24,7 +22,7 @@ const accountSchema = z.object({
   label: z.string().min(1, "Account name is required"),
 })
 
-const EditAccountForm = ({ account, onClose, className }: EditAccountFormProps) => {
+const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
   const { mutateAsync: updateAccount } = useUpdateAccount()
   const isMutating = useIsMutating({ mutationKey: ['updateAccount'] }) > 0
 
@@ -49,7 +47,7 @@ const EditAccountForm = ({ account, onClose, className }: EditAccountFormProps) 
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className={cn("space-y-4", className)}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="institution"

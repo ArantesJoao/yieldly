@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 import { useIsMutating } from '@tanstack/react-query'
-import { useMediaQuery } from "@/hooks/use-media-query"
 
 import {
   DropdownMenu,
@@ -13,23 +12,14 @@ import {
 } from "@/components/ui/dropdown-menu"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer"
 import { Button } from "@/components/ui/button"
+import { ResponsiveModal } from "@/components/ui/responsive-modal"
 import { useDeleteAccount } from '@/services/accounts/mutations'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
 import { Account } from '@/types/api'
@@ -44,7 +34,6 @@ const AccountControls = ({ account }: AccountControlsProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const { mutateAsync: deleteAccount } = useDeleteAccount()
   const isDeletingAccount = useIsMutating({ mutationKey: ['deleteAccount'] }) > 0
-  const isDesktop = useMediaQuery("(min-width: 768px)")
 
   const handleDelete = async () => {
     await deleteAccount(account.id, {
@@ -82,41 +71,14 @@ const AccountControls = ({ account }: AccountControlsProps) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {isDesktop ? (
-        <Dialog open={showEdit} onOpenChange={setShowEdit}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit Account</DialogTitle>
-              <DialogDescription>
-                Update your account information
-              </DialogDescription>
-            </DialogHeader>
-            <EditAccountForm account={account} onClose={() => setShowEdit(false)} />
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      ) : (
-        <Drawer open={showEdit} onOpenChange={setShowEdit}>
-          <DrawerContent>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Edit Account</DrawerTitle>
-              <DrawerDescription>
-                Update your account information
-              </DrawerDescription>
-            </DrawerHeader>
-            <EditAccountForm account={account} onClose={() => setShowEdit(false)} className="px-4" />
-            <DrawerFooter className="pt-2">
-              <DrawerClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      )}
+      <ResponsiveModal
+        open={showEdit}
+        onOpenChange={setShowEdit}
+        title="Edit Account"
+        description="Update your account information"
+      >
+        <EditAccountForm account={account} onClose={() => setShowEdit(false)} />
+      </ResponsiveModal>
 
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
