@@ -1,6 +1,12 @@
+"use client"
+
 import NewAccountButton from "./newAccountButton"
+import { useAccounts } from "@/services/accounts/queries"
 
 const Controls = () => {
+  const { data: accounts } = useAccounts()
+  const hasAccounts = accounts && accounts.length > 0
+
   return (
     <div className="max-w-7xl mx-auto flex flex-col items-start justify-between">
       <div className="pb-3">
@@ -9,7 +15,7 @@ const Controls = () => {
           Manage your accounts and investments
         </p>
       </div>
-      <NewAccountButton />
+      {hasAccounts && <NewAccountButton />}
     </div>
   )
 }

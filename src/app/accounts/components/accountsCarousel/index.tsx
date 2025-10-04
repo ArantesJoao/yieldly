@@ -1,4 +1,5 @@
 import * as React from "react"
+import { Wallet } from "lucide-react"
 
 import {
   Carousel,
@@ -11,12 +12,16 @@ import AccountCardSkeleton from "../../../../components/accountCard/accountCardS
 import { useAccounts } from "@/services/accounts/queries"
 import { useCurrentAccount } from "@/contexts/currentAccountContext"
 import Dots from "./dots"
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 const AccountsCarousel = () => {
   const { data: accounts, isLoading, isError } = useAccounts()
   const { setCurrentAccountId } = useCurrentAccount()
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
+  const router = useRouter()
 
   React.useEffect(() => {
     if (!api) {
@@ -63,6 +68,27 @@ const AccountsCarousel = () => {
   if (isError || !accounts) {
     // TODO: Add error state
     return <div>Error loading accounts</div>
+  }
+
+  if (accounts.length === 0) {
+    return (
+      <Empty className="border-none">
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <Wallet className="size-6" />
+          </EmptyMedia>
+          <EmptyTitle>No accounts yet</EmptyTitle>
+          <EmptyDescription>
+            Create your first account to start tracking your investments.
+          </EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent>
+          <Button onClick={() => router.push('/accounts')}>
+            Go to Accounts
+          </Button>
+        </EmptyContent>
+      </Empty>
+    )
   }
 
   return (

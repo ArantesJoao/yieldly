@@ -10,11 +10,14 @@ import { DebugPanel } from "./components/debugPanel"
 import YieldsTable from "@/components/data/yieldsTable"
 import BalanceGraph from "@/components/data/balanceGraph"
 import AccountsCarousel from "../accounts/components/accountsCarousel"
+import { useAccounts } from "@/services/accounts/queries"
 
 export default function DashboardPage() {
   const router = useRouter()
   const { data: session, status: sessionStatus } = useSession()
+  const { data: accounts } = useAccounts()
   const user = session?.user
+  const hasAccounts = accounts && accounts.length > 0
 
   useEffect(() => {
     if (sessionStatus === 'unauthenticated') {
@@ -31,8 +34,12 @@ export default function DashboardPage() {
           <Title>Olá, {user?.name?.split(' ').slice(0, -1).join(' ') || user?.name?.split(' ')[0]}</Title>
         )}
         <AccountsCarousel />
-        <YieldsTable />
-        <BalanceGraph />
+        {hasAccounts && (
+          <>
+            <YieldsTable />
+            <BalanceGraph />
+          </>
+        )}
       </div>
       <DebugPanel />
     </>
