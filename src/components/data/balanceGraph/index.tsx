@@ -1,36 +1,42 @@
 "use client"
 
+import * as React from "react"
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { DateRangePicker, type DateRange } from "@/components/ui/date-range-picker"
 import BalanceGraph from "./balanceGraph"
 
-interface GraphsProps {
-  period: string
-}
+const Graphs = () => {
+  const [dateRange, setDateRange] = React.useState<DateRange>(() => {
+    const to = new Date()
+    const from = new Date()
+    from.setDate(from.getDate() - 30)
+    return { from, to }
+  })
 
-const Graphs = ({ period = "Last 30 days" }: GraphsProps) => {
+  const getDaysText = () => {
+    const days = Math.round((dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24))
+    return `Last ${days} days`
+  }
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Balance</CardTitle>
-        <CardDescription>{period}</CardDescription>
+        <CardDescription>{getDaysText()}</CardDescription>
+        <CardAction>
+          <DateRangePicker value={dateRange} onChange={setDateRange} />
+        </CardAction>
       </CardHeader>
       <CardContent>
-        <BalanceGraph />
+        <BalanceGraph dateRange={dateRange} />
       </CardContent>
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 leading-none font-medium">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="text-muted-foreground leading-none">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
     </Card>
   )
 }

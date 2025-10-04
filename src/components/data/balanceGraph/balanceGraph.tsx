@@ -1,14 +1,17 @@
 "use client"
 
-import { useAppDate } from "@/app/providers/appDateProvider";
 import { useBalanceGraphData } from "./useBalanceGraphData";
 import BalanceGraphEmpty from "./BalanceGraphEmpty";
 import BalanceGraphChart from "./BalanceGraphChart";
 import BalanceGraphSkeleton from "./BalanceGraphSkeleton";
+import type { DateRange } from "@/components/ui/date-range-picker";
 
-const BalanceGraph = () => {
-  const { currentDate } = useAppDate();
-  const { chartData, isLoading } = useBalanceGraphData(currentDate);
+interface BalanceGraphProps {
+  dateRange: DateRange
+}
+
+const BalanceGraph = ({ dateRange }: BalanceGraphProps) => {
+  const { chartData, isLoading } = useBalanceGraphData(dateRange);
 
   if (isLoading) {
     return <BalanceGraphSkeleton />;

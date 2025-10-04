@@ -1,18 +1,16 @@
 import { useMemo } from "react";
 import { getLocalDateString, convertToMajor } from "@/utils/conversions";
 import { useTotalSummary } from "@/services/summary/queries";
+import type { DateRange } from "@/components/ui/date-range-picker";
 
-export const useBalanceGraphData = (currentDate: Date) => {
-  // Get summaries for last 30 days from current app date
+export const useBalanceGraphData = (dateRange: DateRange) => {
   const toDate = useMemo(() => {
-    return getLocalDateString(currentDate);
-  }, [currentDate]);
+    return getLocalDateString(dateRange.to);
+  }, [dateRange.to]);
 
   const fromDate = useMemo(() => {
-    const date = new Date(currentDate);
-    date.setDate(date.getDate() - 30);
-    return getLocalDateString(date);
-  }, [currentDate]);
+    return getLocalDateString(dateRange.from);
+  }, [dateRange.from]);
 
   const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate);
 

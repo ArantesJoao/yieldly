@@ -3,7 +3,6 @@
 import { useMemo } from "react";
 import { formatCurrency, formatCurrencyCompact, formatDateShort, getLocalDateString } from "@/utils/conversions";
 import { useTotalSummary } from "@/services/summary/queries";
-import { useAppDate } from "@/app/providers/appDateProvider";
 import {
   Table,
   TableBody,
@@ -13,20 +12,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import YieldsTableSkeleton from "./YieldsTableSkeleton";
+import type { DateRange } from "@/components/ui/date-range-picker";
 
-const YieldsTable = () => {
-  const { currentDate } = useAppDate();
+interface YieldsTableProps {
+  dateRange: DateRange
+}
 
-  // Get summaries for last 90 days from current app date
+const YieldsTable = ({ dateRange }: YieldsTableProps) => {
   const toDate = useMemo(() => {
-    return getLocalDateString(currentDate);
-  }, [currentDate]);
+    return getLocalDateString(dateRange.to);
+  }, [dateRange.to]);
 
   const fromDate = useMemo(() => {
-    const date = new Date(currentDate);
-    date.setDate(date.getDate() - 90);
-    return getLocalDateString(date);
-  }, [currentDate]);
+    return getLocalDateString(dateRange.from);
+  }, [dateRange.from]);
 
   const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate);
 
