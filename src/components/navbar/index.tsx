@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { signIn, useSession } from "next-auth/react"
+import { useTranslation } from "react-i18next"
 
 import Logo from "./logo"
 import { Button } from "../ui/button"
@@ -11,6 +12,7 @@ import { HamburgerButton } from "./hamburger-button"
 
 export default function Navbar() {
   const { data: session } = useSession()
+  const { t } = useTranslation('common')
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const router = useRouter()
@@ -18,9 +20,9 @@ export default function Navbar() {
 
 
   const navItems = [
-    { id: "dashboard", label: "Dashboard", fullLabel: "Dashboard" },
-    { id: "accounts", label: "Accounts", fullLabel: "Accounts" },
-    // { id: "settings", label: "Settings", fullLabel: "Settings" },
+    { id: "dashboard", label: t('navbar.dashboard'), fullLabel: t('navbar.dashboard') },
+    { id: "accounts", label: t('navbar.accounts'), fullLabel: t('navbar.accounts') },
+    // { id: "settings", label: t('navbar.settings'), fullLabel: t('navbar.settings') },
   ]
 
   const handleNavigate = (itemId: string) => {
@@ -64,7 +66,7 @@ export default function Navbar() {
               className="h-8 lg:h-10"
               tabIndex={0}
             >
-              Login
+              {t('navbar.login')}
             </Button>
           </div>
         </div>

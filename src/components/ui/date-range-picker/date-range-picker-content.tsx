@@ -1,10 +1,13 @@
 import * as React from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useTranslation } from "react-i18next"
+
 import { QuickRanges } from "./quick-ranges"
 import { CustomRange } from "./custom-range"
 import type { DateRange, DateRangePickerContentProps } from "./types"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export function DateRangePickerContent({ value, onChange, onClose }: DateRangePickerContentProps) {
+  const { t } = useTranslation('common')
   const [tempRange, setTempRange] = React.useState<DateRange>(value)
 
   const handleQuickSelect = (range: DateRange) => {
@@ -27,10 +30,10 @@ export function DateRangePickerContent({ value, onChange, onClose }: DateRangePi
       <div className="px-4 pt-4">
         <TabsList className="w-full">
           <TabsTrigger value="quick" className="flex-1">
-            Quick Ranges
+            {t('dateRangePicker.quickRanges')}
           </TabsTrigger>
           <TabsTrigger value="custom" className="flex-1">
-            Custom Range
+            {t('dateRangePicker.customRange')}
           </TabsTrigger>
         </TabsList>
       </div>

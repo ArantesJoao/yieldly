@@ -1,0 +1,61 @@
+{
+  "title": "Minhas Contas",
+  "subtitle": "Gerencie suas contas e investimentos",
+  "createButton": "+ Criar Conta",
+  "empty": {
+    "title": "Nenhuma conta ainda",
+    "description": "Comece criando sua primeira conta para acompanhar seus investimentos e rendimentos."
+  },
+  "createForm": {
+    "title": "Criar Conta",
+    "description": "Crie uma nova conta para acompanhar seus investimentos",
+    "fields": {
+      "name": "Nome da Conta",
+      "namePlaceholder": "Ex: Nubank, Banco Inter",
+      "institution": "Instituição",
+      "institutionPlaceholder": "Selecione a instituição",
+      "balance": "Saldo Inicial",
+      "balancePlaceholder": "0,00"
+    },
+    "success": "Conta criada com sucesso!",
+    "error": "Erro ao criar conta",
+    "submit": "Criar Conta"
+  },
+  "depositForm": {
+    "currentBalance": "Saldo Atual",
+    "newBalance": "Novo Saldo",
+    "yieldAmount": "Valor do Rendimento",
+    "depositAmount": "Valor do Depósito",
+    "transactionType": "Tipo de Transação",
+    "selectTransactionType": "Selecione o tipo de transação",
+    "note": "Observação",
+    "addNote": "Adicione uma observação",
+    "spreadYields": "Spread Yields",
+    "makeDeposit": "Depositar"
+  },
+  "editForm": {
+    "title": "Editar Conta",
+    "success": "Conta atualizada com sucesso!",
+    "error": "Erro ao atualizar conta",
+    "submit": "Atualizar Conta"
+  },
+  "deleteConfirm": {
+    "title": "Excluir Conta",
+    "description": "Tem certeza que deseja excluir esta conta? Esta ação não pode ser desfeita.",
+    "success": "Conta excluída com sucesso!",
+    "error": "Erro ao excluir conta"
+  },
+  "accountCard": {
+    "account": "Conta",
+    "balance": "Saldo",
+    "totalYields": "Rendimentos Totais",
+    "totalDeposits": "Depósitos Totais",
+    "since": "Desde",
+    "deposit": "Depositar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "editDescription": "Atualize as informações da sua conta",
+    "deleteDescription": "Tem certeza que deseja excluir a conta <strong>{{account}}</strong>? Esta ação não pode ser desfeita e irá excluir todas as entradas de conta e resumos associados.",
+    "deleteDescription2": "Esta ação não pode ser desfeita e irá excluir todas as entradas de conta e resumos associados."
+  }
+}

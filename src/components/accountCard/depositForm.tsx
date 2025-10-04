@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslation } from 'react-i18next'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -37,6 +39,8 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
     isYieldsType,
   } = useDepositFormState()
 
+  const { t } = useTranslation('accounts')
+
   const { newBalance } = useBalanceCalculations({
     currentBalanceMinor,
     watchAmount,
@@ -69,11 +73,11 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="mb-4 p-4 rounded-lg border border-border/50 bg-muted/50 backdrop-blur-sm">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-muted-foreground">Current Balance</span>
+            <span className="text-sm text-muted-foreground">{t('depositForm.currentBalance')}</span>
             <span className="text-lg font-semibold">{formatCurrency(currentBalanceMinor, "BRL")}</span>
           </div>
           <div className="flex justify-between items-center gap-2">
-            <span className="text-sm text-muted-foreground">New Balance</span>
+            <span className="text-sm text-muted-foreground">{t('depositForm.newBalance')}</span>
             <span className="text-lg font-bold text-green-600 dark:text-green-400">{formatCurrency(newBalance, "BRL")}</span>
           </div>
         </div>
@@ -84,7 +88,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
             name="newBalanceInput"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Balance</FormLabel>
+                <FormLabel>{t('depositForm.newBalance')}</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="0.00"
@@ -106,7 +110,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{isYieldsType ? 'Yield Amount' : 'Deposit Amount'}</FormLabel>
+              <FormLabel>{isYieldsType ? t('depositForm.yieldAmount') : t('depositForm.depositAmount')}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="100.00"
@@ -127,11 +131,11 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
           name="transactionTypeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Transaction Type</FormLabel>
+              <FormLabel>{t('depositForm.transactionType')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger disabled={isLoadingTransactionTypes}>
-                    <SelectValue placeholder="Select a transaction type" />
+                    <SelectValue placeholder={t('depositForm.selectTransactionType')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -167,10 +171,10 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
             name="note"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Note (Optional)</FormLabel>
+                <FormLabel>{t('depositForm.note')}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Add a note..."
+                    placeholder={t('depositForm.addNote')}
                     {...field}
                   />
                 </FormControl>
@@ -181,7 +185,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
         )}
 
         <Button type="submit" disabled={isMutating} className='w-full mt-4'>
-          {isMutating ? <Spinner /> : isYieldsType ? 'Spread Yields' : 'Make Deposit'}
+          {isMutating ? <Spinner /> : isYieldsType ? t('depositForm.spreadYields') : t('depositForm.makeDeposit')}
         </Button>
       </form>
     </Form>

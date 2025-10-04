@@ -1,0 +1,31 @@
+{
+  "navbar": {
+    "dashboard": "Dashboard",
+    "accounts": "Contas",
+    "settings": "Configurações",
+    "login": "Entrar",
+    "menu": "Menu"
+  },
+  "language": {
+    "pt-BR": "Português",
+    "en-US": "English",
+    "select": "Idioma"
+  },
+  "buttons": {
+    "create": "Criar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "submit": "Enviar",
+    "confirm": "Confirmar"
+  },
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "noData": "Nenhum dado disponível"
+  }
+}
+

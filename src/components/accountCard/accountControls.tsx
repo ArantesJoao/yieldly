@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from 'react'
-import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useIsMutating } from '@tanstack/react-query'
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 
 import {
   DropdownMenu,
@@ -30,6 +31,7 @@ interface AccountControlsProps {
 }
 
 const AccountControls = ({ account }: AccountControlsProps) => {
+  const { t } = useTranslation('accounts')
   const [showEdit, setShowEdit] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const { mutateAsync: deleteAccount } = useDeleteAccount()
@@ -59,14 +61,14 @@ const AccountControls = ({ account }: AccountControlsProps) => {
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => setShowEdit(true)}>
             <Pencil className="mr-2 h-4 w-4" />
-            <span>Edit</span>
+            <span>{t('accountCard.edit')}</span>
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => setShowDeleteDialog(true)}
             className="text-red-600 focus:text-red-600"
           >
             <Trash2 className="mr-2 h-4 w-4" />
-            <span>Delete</span>
+            <span>{t('accountCard.delete')}</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -74,8 +76,8 @@ const AccountControls = ({ account }: AccountControlsProps) => {
       <ResponsiveModal
         open={showEdit}
         onOpenChange={setShowEdit}
-        title="Edit Account"
-        description="Update your account information"
+        title={t('accountCard.edit')}
+        description={t('accountCard.editDescription')}
       >
         <EditAccountForm account={account} onClose={() => setShowEdit(false)} />
       </ResponsiveModal>
@@ -83,14 +85,14 @@ const AccountControls = ({ account }: AccountControlsProps) => {
       <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Delete Account</DialogTitle>
+            <DialogTitle>{t('accountCard.delete')}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete <strong>{account.label}</strong>? This action cannot be undone and will delete all associated ledger entries and summaries.
+              {t('accountCard.deleteDescription', { account: account.label })}? {t('accountCard.deleteDescription2')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
-              Cancel
+              {t('buttons.cancel')}
             </Button>
             <Button
               variant="destructive"
@@ -98,7 +100,7 @@ const AccountControls = ({ account }: AccountControlsProps) => {
               disabled={isDeletingAccount}
               className="w-full mb-2"
             >
-              {isDeletingAccount ? <Spinner /> : 'Delete'}
+              {isDeletingAccount ? <Spinner /> : t('buttons.delete')}
             </Button>
           </DialogFooter>
         </DialogContent>

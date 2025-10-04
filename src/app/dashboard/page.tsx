@@ -3,6 +3,7 @@
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
+import { useTranslation } from "react-i18next"
 
 import { Title } from "@/components/ui/title"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -16,6 +17,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const { data: session, status: sessionStatus } = useSession()
   const { data: accounts } = useAccounts()
+  const { t } = useTranslation('dashboard')
   const user = session?.user
   const hasAccounts = accounts && accounts.length > 0
 
@@ -25,13 +27,15 @@ export default function DashboardPage() {
     }
   }, [sessionStatus, router])
 
+  const firstName = user?.name?.split(' ').slice(0, -1).join(' ') || user?.name?.split(' ')[0]
+
   return (
     <>
       <div className="flex flex-col gap-4 w-full pb-12">
         {sessionStatus === 'loading' ? (
-          <Title className="flex items-center gap-2">Olá, <Skeleton className="h-10 w-48" /></Title>
+          <Title className="flex items-center gap-2">{t('greeting', { name: '' })} <Skeleton className="h-10 w-48" /></Title>
         ) : (
-          <Title>Olá, {user?.name?.split(' ').slice(0, -1).join(' ') || user?.name?.split(' ')[0]}</Title>
+          <Title>{t('greeting', { name: firstName })}</Title>
         )}
         <AccountsCarousel />
         {hasAccounts && (

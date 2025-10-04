@@ -1,13 +1,14 @@
 // components/accountCard.tsx
 import Image from "next/image"
 import * as React from "react"
+import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
 import { Account } from "@/types/api"
 import { formatCurrency } from "@/utils/conversions"
-import { getInstitutionLogoPath, getInstitutionColors } from "@/utils/institutionData"
 import DepositButton from "./depositButton"
 import AccountControls from "./accountControls"
+import { getInstitutionLogoPath, getInstitutionColors } from "@/utils/institutionData"
 
 interface AccountCardProps {
   account: Account
@@ -17,6 +18,7 @@ interface AccountCardProps {
 }
 
 const AccountCard = ({ account, className, showActions = false, showControls = false }: AccountCardProps) => {
+  const { t } = useTranslation('accounts')
   const backgroundColor = getInstitutionColors(account.institution ?? "")
   const institutionLogo = getInstitutionLogoPath(account.institution ?? "")
 
@@ -43,7 +45,7 @@ const AccountCard = ({ account, className, showActions = false, showControls = f
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-sm/5 opacity-90">Account</div>
+          <div className="text-sm/5 opacity-90">{t('accountCard.account')}</div>
           <div className="truncate text-xl font-semibold tracking-[-0.01em]">
             {account.label}
           </div>
@@ -59,7 +61,7 @@ const AccountCard = ({ account, className, showActions = false, showControls = f
 
       <div className="relative flex justify-between mt-4">
         <div className="flex flex-col gap-0.5">
-          <div className="text-sm/5 opacity-90">Balance</div>
+          <div className="text-sm/5 opacity-90">{t('accountCard.balance')}</div>
           <div className="text-2xl font-bold tabular-nums">
             {formatCurrency(account.currentBalanceMinor ?? 0, "BRL")}
           </div>

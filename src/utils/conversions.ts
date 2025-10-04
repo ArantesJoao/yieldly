@@ -75,6 +75,16 @@ export const formatCurrencyCompact = (minor: number): string => {
 // Date Formatting
 // ============================================================================
 
+import { format } from 'date-fns'
+import { ptBR, enUS } from 'date-fns/locale'
+
+/**
+ * Get date-fns locale object based on locale string
+ */
+export function getDateFnsLocale(locale: string = 'pt-BR') {
+  return locale === 'pt-BR' ? ptBR : enUS
+}
+
 /**
  * Get the current local date in YYYY-MM-DD format
  * This avoids timezone conversion issues when using toISOString()
@@ -88,30 +98,34 @@ export function getLocalDateString(date: Date = new Date()): string {
 }
 
 /**
- * Format date string (YYYY-MM-DD) to short format (e.g., "Jan 5")
+ * Format date string (YYYY-MM-DD) to short format (e.g., "Jan 5" or "5 jan")
  * @param dateStr - Date string in YYYY-MM-DD format
+ * @param locale - Locale string (pt-BR or en-US)
  */
-export function formatDateShort(dateStr: string): string {
+export function formatDateShort(dateStr: string, locale: string = 'pt-BR'): string {
   const [year, month, day] = dateStr.split('-').map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-  });
+  const date = new Date(year, month - 1, day);
+  const dateFnsLocale = getDateFnsLocale(locale)
+  
+  // Format: "5 jan" for PT-BR, "Jan 5" for en-US
+  return format(date, locale === 'pt-BR' ? 'd MMM' : 'MMM d', { locale: dateFnsLocale })
 }
 
 /**
- * Format Date object to long format (e.g., "05 January 2024")
+ * Format Date object to long format (e.g., "05 de janeiro de 2024" or "January 05, 2024")
  * @param date - Date object
+ * @param locale - Locale string (pt-BR or en-US)
  */
-export function formatDateLong(date: Date | undefined): string {
+export function formatDateLong(date: Date | undefined, locale: string = 'pt-BR'): string {
   if (!date) {
     return ""
   }
 
-  return date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
+  const dateFnsLocale = getDateFnsLocale(locale)
+  
+  // Format: "05 de janeiro de 2024" for PT-BR, "January 05, 2024" for en-US
+  return format(date, locale === 'pt-BR' ? "dd 'de' MMMM 'de' yyyy" : 'MMMM dd, yyyy', { 
+    locale: dateFnsLocale 
   })
 }
 

@@ -1,6 +1,8 @@
 "use client"
 
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/languageContext";
 import { formatCurrency, formatCurrencyCompact, formatDateShort, getLocalDateString } from "@/utils/conversions";
 import { useAccountSummary } from "@/services/summary/queries";
 import { useCurrentAccount } from "@/contexts/currentAccountContext";
@@ -21,6 +23,8 @@ interface YieldsTableProps {
 
 const YieldsTable = ({ dateRange }: YieldsTableProps) => {
   const { currentAccountId } = useCurrentAccount();
+  const { t } = useTranslation('dashboard');
+  const { locale } = useLanguage();
 
   const toDate = useMemo(() => {
     return getLocalDateString(dateRange.to);
@@ -39,7 +43,7 @@ const YieldsTable = ({ dateRange }: YieldsTableProps) => {
   if (!summaries || summaries.length === 0) {
     return (
       <div className="max-h-[300px] overflow-y-auto p-4 text-center text-muted-foreground">
-        No data available
+        {t('yieldsTable.empty')}
       </div>
     );
   }
@@ -50,16 +54,16 @@ const YieldsTable = ({ dateRange }: YieldsTableProps) => {
         <Table>
           <TableHeader className="bg-muted sticky top-0">
             <TableRow>
-              <TableHead className="font-semibold text-foreground">Date</TableHead>
-              <TableHead className="font-semibold text-foreground">Balance</TableHead>
-              <TableHead className="font-semibold text-foreground">Yields</TableHead>
-              <TableHead className="font-semibold text-foreground">Deposits</TableHead>
+              <TableHead className="font-semibold text-foreground">{t('yieldsTable.columns.date')}</TableHead>
+              <TableHead className="font-semibold text-foreground">{t('yieldsTable.columns.balance')}</TableHead>
+              <TableHead className="font-semibold text-foreground">{t('yieldsTable.columns.yields')}</TableHead>
+              <TableHead className="font-semibold text-foreground">{t('yieldsTable.columns.deposits')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {summaries.slice().reverse().map((summary) => (
               <TableRow key={summary.date}>
-                <TableCell className="font-medium text-nowrap">{formatDateShort(summary.date)}</TableCell>
+                <TableCell className="font-medium text-nowrap">{formatDateShort(summary.date, locale)}</TableCell>
                 <TableCell className="font-mono">
                   {formatCurrency(summary.balanceEndMinor, "BRL")}
                 </TableCell>

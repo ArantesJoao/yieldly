@@ -1,0 +1,31 @@
+{
+  "navbar": {
+    "dashboard": "Dashboard",
+    "accounts": "Accounts",
+    "settings": "Settings",
+    "login": "Login",
+    "menu": "Menu"
+  },
+  "language": {
+    "pt-BR": "Português",
+    "en-US": "English",
+    "select": "Language"
+  },
+  "buttons": {
+    "create": "Create",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "submit": "Submit",
+    "confirm": "Confirm"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "noData": "No data available"
+  }
+}
+

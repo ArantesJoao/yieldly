@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useCreateAccount } from '@/services/accounts/mutations'
 import { convertToMinor } from '@/utils/conversions'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
+import { useTranslation } from 'react-i18next'
 
 interface CreateAccountFormProps {
   onClose: () => void
@@ -23,6 +24,7 @@ const accountSchema = z.object({
 const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
   const { mutateAsync: createAccount } = useCreateAccount()
   const isMutating = useIsMutating({ mutationKey: ['createAccount'] }) > 0
+  const { t } = useTranslation('accounts')
 
   const form = useForm<z.infer<typeof accountSchema>>({
     resolver: zodResolver(accountSchema),
@@ -56,9 +58,9 @@ const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
           name="institution"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Institution</FormLabel>
+              <FormLabel>{t('createForm.fields.institution')}</FormLabel>
               <FormControl>
-                <Input placeholder="Nubank" {...field} />
+                <Input placeholder={t('createForm.fields.institutionPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,9 +71,9 @@ const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
           name="label"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Account Name</FormLabel>
+              <FormLabel>{t('createForm.fields.name')}</FormLabel>
               <FormControl>
-                <Input placeholder="Main Account" {...field} />
+                <Input placeholder={t('createForm.fields.namePlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,10 +84,10 @@ const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
           name="initialBalance"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Initial Balance</FormLabel>
+              <FormLabel>{t('createForm.fields.balance')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="1000"
+                  placeholder={t('createForm.fields.balancePlaceholder')}
                   type="number"
                   {...field}
                   value={field.value ?? ''}
@@ -97,7 +99,7 @@ const CreateAccountForm = ({ onClose }: CreateAccountFormProps) => {
           )}
         />
         <Button type="submit" disabled={isMutating} className='w-full'>
-          {isMutating ? <Spinner /> : 'Create Account'}
+          {isMutating ? <Spinner /> : t('createForm.submit')}
         </Button>
       </form>
     </Form>

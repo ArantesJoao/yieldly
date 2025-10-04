@@ -1,0 +1,27 @@
+{
+  "greeting": "Hello, {{name}}",
+  "title": "Dashboard",
+  "accountsCarousel": {
+    "empty": {
+      "title": "No accounts yet",
+      "description": "Create your first account to start tracking your investments.",
+      "button": "Go to Accounts"
+    }
+  },
+  "yieldsTable": {
+    "title": "Yields",
+    "columns": {
+      "date": "Date",
+      "balance": "Balance",
+      "yields": "Yields",
+      "deposits": "Deposits"
+    },
+    "empty": "No data available"
+  },
+  "balanceGraph": {
+    "title": "Balance Evolution",
+    "balance": "Balance",
+    "date": "Date"
+  }
+}
+

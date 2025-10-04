@@ -2,6 +2,7 @@
 
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useIsMutating } from '@tanstack/react-query'
 
@@ -23,6 +24,7 @@ const accountSchema = z.object({
 })
 
 const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
+  const { t } = useTranslation('accounts')
   const { mutateAsync: updateAccount } = useUpdateAccount()
   const isMutating = useIsMutating({ mutationKey: ['updateAccount'] }) > 0
 
@@ -53,9 +55,9 @@ const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
           name="institution"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Institution</FormLabel>
+              <FormLabel>{t('editForm.fields.institution')}</FormLabel>
               <FormControl>
-                <Input placeholder="Nubank" {...field} />
+                <Input placeholder={t('editForm.fields.institutionPlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -66,16 +68,16 @@ const EditAccountForm = ({ account, onClose }: EditAccountFormProps) => {
           name="label"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Account Name</FormLabel>
+              <FormLabel>{t('editForm.fields.name')}</FormLabel>
               <FormControl>
-                <Input placeholder="Main Account" {...field} />
+                <Input placeholder={t('editForm.fields.namePlaceholder')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button type="submit" disabled={isMutating} className='w-full'>
-          {isMutating ? <Spinner /> : 'Update Account'}
+          {isMutating ? <Spinner /> : t('editForm.submit')}
         </Button>
       </form>
     </Form>

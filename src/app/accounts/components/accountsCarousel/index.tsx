@@ -1,5 +1,6 @@
 import * as React from "react"
 import { Wallet } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 import {
   Carousel,
@@ -19,6 +20,7 @@ import { useRouter } from "next/navigation"
 const AccountsCarousel = () => {
   const { data: accounts, isLoading, isError } = useAccounts()
   const { setCurrentAccountId } = useCurrentAccount()
+  const { t } = useTranslation('dashboard')
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
   const router = useRouter()
@@ -77,14 +79,14 @@ const AccountsCarousel = () => {
           <EmptyMedia variant="icon">
             <Wallet className="size-6" />
           </EmptyMedia>
-          <EmptyTitle>No accounts yet</EmptyTitle>
+          <EmptyTitle>{t('accountsCarousel.empty.title')}</EmptyTitle>
           <EmptyDescription>
-            Create your first account to start tracking your investments.
+            {t('accountsCarousel.empty.description')}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
           <Button onClick={() => router.push('/accounts')}>
-            Go to Accounts
+            {t('accountsCarousel.empty.button')}
           </Button>
         </EmptyContent>
       </Empty>

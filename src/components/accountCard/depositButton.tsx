@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslation } from "react-i18next"
+
 import { Button } from "@/components/ui/button"
 import { BanknoteArrowUp } from "lucide-react"
 import { ResponsiveModal } from "@/components/ui/responsive-modal"
@@ -13,6 +15,7 @@ interface DepositButtonProps {
 }
 
 export default function DepositButton({ accountId, label, currentBalanceMinor }: DepositButtonProps) {
+  const { t } = useTranslation('accounts')
   const [isOpen, setIsOpen] = useState(false)
 
   return (

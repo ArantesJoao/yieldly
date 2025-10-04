@@ -1,0 +1,59 @@
+{
+  "title": "My Accounts",
+  "subtitle": "Manage your accounts and investments",
+  "createButton": "+ Create Account",
+  "empty": {
+    "title": "No accounts yet",
+    "description": "Get started by creating your first account to track your investments and yields."
+  },
+  "createForm": {
+    "title": "Create Account",
+    "description": "Create a new account to track your investments",
+    "fields": {
+      "name": "Account Name",
+      "namePlaceholder": "e.g. Nubank, Banco Inter",
+      "institution": "Institution",
+      "institutionPlaceholder": "Select institution",
+      "balance": "Initial Balance",
+      "balancePlaceholder": "0.00"
+    },
+    "success": "Account created successfully!",
+    "error": "Error creating account"
+  },
+  "depositForm": {
+    "currentBalance": "Current Balance",
+    "newBalance": "New Balance",
+    "yieldAmount": "Yield Amount",
+    "depositAmount": "Deposit Amount",
+    "transactionType": "Transaction Type",
+    "selectTransactionType": "Select Transaction Type",
+    "note": "Note",
+    "addNote": "Add Note",
+    "spreadYields": "Spread Yields",
+    "makeDeposit": "Make Deposit"
+  },
+  "editForm": {
+    "title": "Edit Account",
+    "success": "Account updated successfully!",
+    "error": "Error updating account"
+  },
+  "deleteConfirm": {
+    "title": "Delete Account",
+    "description": "Are you sure you want to delete this account? This action cannot be undone.",
+    "success": "Account deleted successfully!",
+    "error": "Error deleting account"
+  },
+  "accountCard": {
+    "account": "Account",
+    "balance": "Balance",
+    "totalYields": "Total Yields",
+    "totalDeposits": "Total Deposits",
+    "since": "Since",
+    "deposit": "Deposit",
+    "edit": "Edit",
+    "delete": "Delete",
+    "editDescription": "Update your account information",
+    "deleteDescription": "Are you sure you want to delete <strong>{{account}}</strong>? This action cannot be undone and will delete all associated ledger entries and summaries.",
+    "deleteDescription2": "This action cannot be undone and will delete all associated ledger entries and summaries."
+  }
+}

@@ -2,8 +2,14 @@
 
 import * as React from "react"
 import { CalendarIcon } from "lucide-react"
+import { useTranslation } from "react-i18next"
+
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import type { DateRangePickerProps } from "./types"
+import { useMediaQuery } from "@/hooks/use-media-query"
+import { formatDateShort, getLocalDateString } from "@/utils/conversions"
+import { DateRangePickerContent } from "./date-range-picker-content"
 import {
   Drawer,
   DrawerClose,
@@ -18,12 +24,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { useMediaQuery } from "@/hooks/use-media-query"
-import { formatDateShort, getLocalDateString } from "@/utils/conversions"
-import { DateRangePickerContent } from "./date-range-picker-content"
-import type { DateRangePickerProps } from "./types"
 
 export function DateRangePicker({ value, onChange, className }: DateRangePickerProps) {
+  const { t } = useTranslation('common')
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -73,7 +76,7 @@ export function DateRangePicker({ value, onChange, className }: DateRangePickerP
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="pb-0">
-          <DrawerTitle>Select Date Range</DrawerTitle>
+          <DrawerTitle>{t('dateRangePicker.title')}</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto max-h-[70vh]">
           <DateRangePickerContent
@@ -84,7 +87,7 @@ export function DateRangePicker({ value, onChange, className }: DateRangePickerP
         </div>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
-            <Button variant="outline" size="lg">Cancel</Button>
+            <Button variant="outline" size="lg">{t('buttons.cancel')}</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { useTranslation } from "react-i18next"
+
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
 import {
@@ -48,6 +50,7 @@ export function ResponsiveModal({
   dialogClassName,
   contentClassName,
 }: ResponsiveModalProps) {
+  const { t } = useTranslation('common')
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   if (isDesktop) {
@@ -63,7 +66,7 @@ export function ResponsiveModal({
           {!hideCancel && (
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">{t('buttons.cancel')}</Button>
               </DialogClose>
             </DialogFooter>
           )}
@@ -84,7 +87,7 @@ export function ResponsiveModal({
         {!hideCancel && (
           <DrawerFooter className="pt-2">
             <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{t('buttons.cancel')}</Button>
             </DrawerClose>
           </DrawerFooter>
         )}

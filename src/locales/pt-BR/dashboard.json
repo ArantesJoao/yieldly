@@ -1,0 +1,27 @@
+{
+  "greeting": "Olá, {{name}}",
+  "title": "Dashboard",
+  "accountsCarousel": {
+    "empty": {
+      "title": "Nenhuma conta ainda",
+      "description": "Crie sua primeira conta para começar a acompanhar seus investimentos.",
+      "button": "Ir para Contas"
+    }
+  },
+  "yieldsTable": {
+    "title": "Rendimentos",
+    "columns": {
+      "date": "Data",
+      "balance": "Saldo",
+      "yields": "Rendimentos",
+      "deposits": "Depósitos"
+    },
+    "empty": "Nenhum dado disponível"
+  },
+  "balanceGraph": {
+    "title": "Evolução do Saldo",
+    "balance": "Saldo",
+    "date": "Data"
+  }
+}
+

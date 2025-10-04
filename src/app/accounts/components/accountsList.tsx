@@ -1,6 +1,7 @@
 "use client"
 
 import { Wallet } from "lucide-react"
+import { useTranslation } from "react-i18next"
 import { useAccounts } from "@/services/accounts/queries"
 
 import { cn } from "@/lib/utils"
@@ -14,13 +15,14 @@ interface AccountsListProps {
 
 const AccountsList = ({ className }: AccountsListProps) => {
   const { data: accounts, isLoading, isError } = useAccounts()
+  const { t } = useTranslation('accounts')
 
   if (isLoading && !accounts) {
-    return <div>Loading...</div>
+    return <div>{t('common:common.loading')}</div>
   }
 
   if (isError) {
-    return <div>Error loading accounts</div>
+    return <div>{t('common:common.error')}</div>
   }
 
   if (accounts && accounts.length === 0) {
@@ -30,9 +32,9 @@ const AccountsList = ({ className }: AccountsListProps) => {
           <EmptyMedia variant="icon">
             <Wallet className="size-6" />
           </EmptyMedia>
-          <EmptyTitle>No accounts yet</EmptyTitle>
+          <EmptyTitle>{t('empty.title')}</EmptyTitle>
           <EmptyDescription>
-            Get started by creating your first account to track your investments and yields.
+            {t('empty.description')}
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>

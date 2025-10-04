@@ -11,12 +11,17 @@ interface MobileMenuProps {
   onNavigate: (id: string) => void
 }
 
+import { LanguageSwitcher } from "./language-switcher"
+import { useTranslation } from "react-i18next"
+
 export function MobileMenu({
   isOpen,
   navItems,
   onClose,
   onNavigate
 }: MobileMenuProps) {
+  const { t } = useTranslation('common')
+
   const handleNavigate = (id: string) => {
     onNavigate(id)
     onClose()
@@ -57,7 +62,7 @@ export function MobileMenu({
                 id="mobile-menu-title"
                 className="text-sm font-semibold text-foreground/80 tracking-tight"
               >
-                Menu
+                {t('navbar.menu')}
               </h3>
               <button
                 onClick={onClose}
@@ -117,6 +122,11 @@ export function MobileMenu({
                   </svg>
                 </button>
               ))}
+
+              {/* Language Switcher */}
+              <div style={{ transitionDelay: isOpen ? `${navItems.length * 50}ms` : '0ms' }}>
+                <LanguageSwitcher />
+              </div>
             </nav>
           </div>
         </div>
