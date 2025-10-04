@@ -6,7 +6,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import AccountCard from "../accountCard/accountCard"
+import AccountCard from "../../../../components/accountCard/accountCard"
+import AccountCardSkeleton from "../../../../components/accountCard/accountCardSkeleton"
 import { useAccounts } from "@/services/accounts/queries"
 import Dots from "./dots"
 
@@ -28,8 +29,26 @@ const AccountsCarousel = () => {
   }, [api, current, setCurrent])
 
   if (isLoading && !accounts) {
-    // TODO: Add skeleton
-    return <div>Loading...</div>
+    return (
+      <div className="">
+        <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
+          <Carousel className="w-full">
+            <CarouselContent>
+              {[1, 2, 3].map((index) => (
+                <CarouselItem key={index}>
+                  <AccountCardSkeleton className="h-72" />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </div>
+        <Dots
+          current={0}
+          onClick={() => { }}
+          amount={3}
+        />
+      </div>
+    )
   }
 
   if (isError || !accounts) {

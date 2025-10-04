@@ -3,7 +3,7 @@
 import { useAccounts } from "@/services/accounts/queries"
 
 import { cn } from "@/lib/utils"
-import AccountCard from "./accountCard/accountCard"
+import AccountCard from "../../../components/accountCard/accountCard"
 
 interface AccountsListProps {
   className?: string
