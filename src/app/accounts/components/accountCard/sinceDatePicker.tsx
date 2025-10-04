@@ -33,30 +33,44 @@ function isValidDate(date: Date | undefined) {
 }
 
 interface SinceDatePickerProps {
-  value: Date | undefined
-  onChange: (date: Date | undefined) => void
-  initialDate?: Date
+  value: string
+  onChange: (date: string) => void
+  defaultValue?: string
 }
 
-export function SinceDatePicker({ value, onChange, initialDate }: SinceDatePickerProps) {
+export function SinceDatePicker({ value, onChange, defaultValue }: SinceDatePickerProps) {
   const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState<Date | undefined>(initialDate)
-  const [month, setMonth] = React.useState<Date | undefined>(initialDate)
-  const [inputValue, setInputValue] = React.useState(formatDate(initialDate))
+  const initialDate = value || defaultValue
+  const [date, setDate] = React.useState<Date | undefined>(
+    initialDate ? new Date(initialDate) : undefined
+  )
+  const [month, setMonth] = React.useState<Date | undefined>(date)
+  const [inputValue, setInputValue] = React.useState(formatDate(date))
 
   React.useEffect(() => {
-    if (initialDate && !date) {
-      setDate(initialDate)
-      setMonth(initialDate)
-      setInputValue(formatDate(initialDate))
-      onChange(initialDate)
+    if (defaultValue && !date) {
+      const defaultDate = new Date(defaultValue)
+      setDate(defaultDate)
+      setMonth(defaultDate)
+      setInputValue(formatDate(defaultDate))
     }
-  }, [initialDate, date, onChange])
+  }, [defaultValue, date])
+
+  React.useEffect(() => {
+    if (value && value !== date?.toISOString().split('T')[0]) {
+      const newDate = new Date(value)
+      setDate(newDate)
+      setMonth(newDate)
+      setInputValue(formatDate(newDate))
+    }
+  }, [value, date])
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
     setInputValue(formatDate(selectedDate))
-    onChange(selectedDate)
+    if (selectedDate) {
+      onChange(selectedDate.toISOString().split('T')[0])
+    }
     setOpen(false)
   }
 
@@ -68,7 +82,7 @@ export function SinceDatePicker({ value, onChange, initialDate }: SinceDatePicke
     if (isValidDate(parsedDate)) {
       setDate(parsedDate)
       setMonth(parsedDate)
-      onChange(parsedDate)
+      onChange(parsedDate.toISOString().split('T')[0])
     }
   }
 
@@ -93,6 +107,13 @@ export function SinceDatePicker({ value, onChange, initialDate }: SinceDatePicke
             }}
           />
           <Popover open={open} onOpenChange={setOpen}>
+            {open && (
+              <div
+                className="fixed inset-0 z-40 backdrop-blur-[2px]"
+                onClick={() => setOpen(false)}
+                aria-hidden="true"
+              />
+            )}
             <PopoverTrigger asChild>
               <Button
                 type="button"
@@ -115,6 +136,7 @@ export function SinceDatePicker({ value, onChange, initialDate }: SinceDatePicke
                 mode="single"
                 selected={date}
                 captionLayout="dropdown"
+                className="w-[75vw]"
                 month={month}
                 onMonthChange={setMonth}
                 onSelect={handleDateSelect}
@@ -128,4 +150,5 @@ export function SinceDatePicker({ value, onChange, initialDate }: SinceDatePicke
     </FormItem>
   )
 }
+
 

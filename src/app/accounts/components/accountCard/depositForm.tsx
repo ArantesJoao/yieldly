@@ -1,10 +1,5 @@
 "use client"
 
-import * as z from 'zod'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useIsMutating } from '@tanstack/react-query'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -15,12 +10,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useCreateLedgerEntry } from '@/services/ledger/mutations'
-import { useIncreaseTypes } from '@/services/increase-types/queries'
-import { convertToMinor, formatCurrency } from '@/utils/conversions'
+import { formatCurrency } from '@/utils/conversions'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
-import { useMemo } from 'react'
-import { useAppDate } from '@/app/providers/appDateProvider'
+import {
+  useDepositFormState,
+  useBalanceCalculations,
+  useYieldsBalanceSync,
+  useDepositSubmit,
+  useLastDateWithoutYields,
+} from './hooks'
+import { SinceDatePicker } from './sinceDatePicker'
 
 interface DepositFormProps {
   accountId: string
@@ -28,50 +27,42 @@ interface DepositFormProps {
   toggleDialog: () => void
 }
 
-const depositSchema = z.object({
-  amount: z.number().positive("Amount must be positive").multipleOf(0.01, "Amount must have at most 2 decimal places"),
-  increaseTypeId: z.string().min(1, "Please select a deposit type"),
-  note: z.string().max(500, "Note must be less than 500 characters").optional(),
-})
-
 const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFormProps) => {
-  const { mutateAsync: createLedgerEntry } = useCreateLedgerEntry()
-  const { data: increaseTypes, isLoading: isLoadingIncreaseTypes } = useIncreaseTypes()
-  const isMutating = useIsMutating({ mutationKey: ['createLedgerEntry'] }) > 0
-  const { getCurrentDateString } = useAppDate()
+  const {
+    form,
+    increaseTypes,
+    isLoadingIncreaseTypes,
+    watchAmount,
+    watchNewBalanceInput,
+    isYieldsType,
+  } = useDepositFormState()
 
-  const form = useForm<z.infer<typeof depositSchema>>({
-    resolver: zodResolver(depositSchema),
-    defaultValues: {
-      amount: 0,
-      increaseTypeId: "",
-      note: "",
-    },
+  const { newBalance } = useBalanceCalculations({
+    currentBalanceMinor,
+    watchAmount,
+    watchNewBalanceInput,
+    isYieldsType,
   })
 
-  const watchAmount = form.watch("amount")
+  useYieldsBalanceSync({
+    isYieldsType,
+    watchAmount,
+    watchNewBalanceInput,
+    currentBalanceMinor,
+    form,
+  })
 
-  const newBalance = useMemo(() => {
-    const amountMinor = watchAmount ? convertToMinor(watchAmount) : 0
-    return currentBalanceMinor + amountMinor
-  }, [watchAmount, currentBalanceMinor])
+  const { lastDateWithoutYields } = useLastDateWithoutYields({
+    accountId,
+    isYieldsType,
+    form,
+  })
 
-  async function onSubmit(values: z.infer<typeof depositSchema>) {
-    const amountMinor = convertToMinor(values.amount)
-    const today = getCurrentDateString()
-
-    await createLedgerEntry({
-      accountId,
-      date: today,
-      increaseTypeId: values.increaseTypeId,
-      amountMinor,
-      note: values.note || undefined,
-    }, {
-      onSuccess: () => {
-        toggleDialog()
-      }
-    })
-  }
+  const { onSubmit, isMutating } = useDepositSubmit({
+    accountId,
+    toggleDialog,
+    isYieldsType,
+  })
 
   return (
     <Form {...form}>
@@ -81,18 +72,41 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
             <span className="text-sm text-muted-foreground">Current Balance</span>
             <span className="text-lg font-semibold">{formatCurrency(currentBalanceMinor, "BRL")}</span>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center gap-2">
             <span className="text-sm text-muted-foreground">New Balance</span>
             <span className="text-lg font-bold text-green-600 dark:text-green-400">{formatCurrency(newBalance, "BRL")}</span>
           </div>
         </div>
+
+        {isYieldsType && (
+          <FormField
+            control={form.control}
+            name="newBalanceInput"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Balance</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="0.00"
+                    type="number"
+                    step="0.01"
+                    {...field}
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value === '' ? undefined : parseFloat(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Deposit Amount</FormLabel>
+              <FormLabel>{isYieldsType ? 'Yield Amount' : 'Deposit Amount'}</FormLabel>
               <FormControl>
                 <Input
                   placeholder="100.00"
@@ -133,25 +147,41 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="note"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Note (Optional)</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Add a note..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {isYieldsType && (
+          <FormField
+            control={form.control}
+            name="sinceDate"
+            render={({ field }) => (
+              <SinceDatePicker
+                value={field.value || ""}
+                onChange={field.onChange}
+                defaultValue={lastDateWithoutYields}
+              />
+            )}
+          />
+        )}
+
+        {!isYieldsType && (
+          <FormField
+            control={form.control}
+            name="note"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Note (Optional)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Add a note..."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button type="submit" disabled={isMutating} className='w-full mt-4'>
-          {isMutating ? <Spinner /> : 'Make Deposit'}
+          {isMutating ? <Spinner /> : isYieldsType ? 'Spread Yields' : 'Make Deposit'}
         </Button>
       </form>
     </Form>

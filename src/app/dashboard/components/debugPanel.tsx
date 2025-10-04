@@ -37,8 +37,8 @@ export function DebugPanel() {
   const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate)
 
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr + 'T00:00:00Z')
-    return date.toLocaleDateString('en-US', {
+    const [year, month, day] = dateStr.split('-').map(Number)
+    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric'

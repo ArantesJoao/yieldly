@@ -14,3 +14,10 @@ export const getTotalSummary = async (from: string, to: string): Promise<DailySu
   return response.data
 }
 
+export const getAccountSummary = async (accountId: string, from: string, to: string): Promise<DailySummary[]> => {
+  const response = await httpClient<DailySummary[]>(
+    `/api/summary/account?accountId=${accountId}&from=${from}&to=${to}`
+  )
+  return response.data
+}
+
