@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useSession } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 
 import Logo from "./logo"
 import { Button } from "../ui/button"
@@ -14,19 +14,27 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const router = useRouter()
+  const [isLoginLoading, setIsLoginLoading] = useState(false)
+
 
   const navItems = [
     { id: "dashboard", label: "Dashboard", fullLabel: "Dashboard" },
     { id: "accounts", label: "Accounts", fullLabel: "Accounts" },
-    { id: "settings", label: "Settings", fullLabel: "Settings" },
+    // { id: "settings", label: "Settings", fullLabel: "Settings" },
   ]
 
   const handleNavigate = (itemId: string) => {
     router.push(itemId)
   }
 
-  const handleLogin = () => {
-    window.location.href = '/login'
+  const handleGoogleSignIn = async () => {
+    setIsLoginLoading(true)
+    try {
+      await signIn('google', { callbackUrl: '/dashboard' })
+    } catch (error) {
+      console.error('Sign in error:', error)
+      setIsLoginLoading(false)
+    }
   }
 
   // If user is not logged in, show only logo and login button
@@ -49,7 +57,8 @@ export default function Navbar() {
 
             {/* Login button */}
             <Button
-              onClick={handleLogin}
+              onClick={handleGoogleSignIn}
+              disabled={isLoginLoading}
               onMouseEnter={() => setHoveredItem("login")}
               onMouseLeave={() => setHoveredItem(null)}
               className="h-8 lg:h-10"
