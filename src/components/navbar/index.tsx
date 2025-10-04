@@ -66,7 +66,7 @@ export default function Navbar() {
   // If user is logged in, show full navigation
   return (
     <>
-      <nav className={`fixed top-3 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-auto px-4 lg:px-0 transition-transform duration-1200 ease-out ${isMobileMenuOpen ? '-translate-y-32' : 'translate-y-0'}`}>
+      <nav className="fixed top-3 sm:top-6 left-1/2 transform -translate-x-1/2 z-50 w-auto px-4 lg:px-0">
         <div className="relative backdrop-blur-md bg-gradient-to-r from-card via-card/95 to-card border border-primary/20 rounded-full px-4 lg:px-6 py-2.5 lg:py-3 shadow-2xl shadow-primary/30">
           {/* Background glow effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-primary/25 via-primary/10 to-primary/25 rounded-full" />
