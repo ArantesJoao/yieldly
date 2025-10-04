@@ -11,6 +11,11 @@ export const useCreateAccount = () => {
     mutationFn: (accountData: CreateAccountData) => createAccount(accountData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
+
+      // Invalidate all summary queries (account creation with initial balance affects summaries)
+      queryClient.invalidateQueries({ queryKey: ['totalSummary'] })
+      queryClient.invalidateQueries({ queryKey: ['accountSummary'] })
+
       toast.success("Account created successfully")
     },
     onError: () => {
@@ -44,6 +49,11 @@ export const useDeleteAccount = () => {
     mutationFn: (id: string) => deleteAccount(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
+
+      // Invalidate all summary queries (deleting account affects summaries)
+      queryClient.invalidateQueries({ queryKey: ['totalSummary'] })
+      queryClient.invalidateQueries({ queryKey: ['accountSummary'] })
+
       toast.success("Account deleted successfully")
     },
     onError: () => {

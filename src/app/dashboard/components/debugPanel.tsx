@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from "@/components/ui/button"
-import { formatCurrency, getLocalDateString } from "@/utils/conversions"
+import { formatCurrency, formatDateShort, getLocalDateString } from "@/utils/conversions"
 import { useTotalSummary } from "@/services/summary/queries"
 import { useAppDate } from "@/app/providers/appDateProvider"
 import { Calendar as CalendarIcon, ChevronDown, ChevronUp } from "lucide-react"
@@ -36,14 +36,6 @@ export function DebugPanel() {
 
   const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate)
 
-  const formatDate = (dateStr: string) => {
-    const [year, month, day] = dateStr.split('-').map(Number)
-    return new Date(year, month - 1, day).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    })
-  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border shadow-lg">
@@ -198,7 +190,7 @@ export function DebugPanel() {
                               key={summary.date}
                               className="border-t hover:bg-muted/50"
                             >
-                              <td className="p-2 font-medium">{formatDate(summary.date)}</td>
+                              <td className="p-2 font-medium">{formatDateShort(summary.date)}</td>
                               <td className="p-2 text-right font-mono">
                                 {formatCurrency(summary.balanceEndMinor, "BRL")}
                               </td>

@@ -62,6 +62,3 @@ export function convertDateToUTC(dateString: string): Date {
   return new Date(`${dateString}T12:00:00.000Z`)
 }
 
-export function formatDateToString(date: Date): string {
-  return date.toISOString().split('T')[0]
-}

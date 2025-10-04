@@ -1,6 +1,7 @@
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-import { BALANCE_GRAPH_CONFIG, formatCurrency, formatCurrencyDetailed } from "./chartConfig";
+import { BALANCE_GRAPH_CONFIG } from "./chartConfig";
+import { convertToMinor, formatCurrencyCompact, formatCurrencyFromMajorDetailed } from "@/utils/conversions";
 
 interface ChartDataPoint {
   date: string;
@@ -27,7 +28,7 @@ const BalanceGraphChart = ({ data }: BalanceGraphChartProps) => {
         <YAxis
           tickLine={false}
           axisLine={false}
-          tickFormatter={formatCurrency}
+          tickFormatter={(value) => formatCurrencyCompact(convertToMinor(value))}
         />
         <ChartTooltip
           cursor={false}
@@ -39,11 +40,11 @@ const BalanceGraphChart = ({ data }: BalanceGraphChartProps) => {
                 }
                 return '';
               }}
-              formatter={(value) => formatCurrencyDetailed(Number(value))}
+              formatter={(value) => formatCurrencyFromMajorDetailed(Number(value))}
             />
           }
         />
-        <Bar dataKey="balance" fill="var(--color-balance)" radius={4} />
+        <Bar dataKey="balance" fill="#64748b" radius={2} />
       </BarChart>
     </ChartContainer>
   );

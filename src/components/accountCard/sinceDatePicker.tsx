@@ -13,17 +13,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-function formatDate(date: Date | undefined) {
-  if (!date) {
-    return ""
-  }
-
-  return date.toLocaleDateString("en-US", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  })
-}
+import { formatDateLong } from "@/utils/conversions";
 
 function isValidDate(date: Date | undefined) {
   if (!date) {
@@ -45,14 +35,14 @@ export function SinceDatePicker({ value, onChange, defaultValue }: SinceDatePick
     initialDate ? new Date(initialDate) : undefined
   )
   const [month, setMonth] = React.useState<Date | undefined>(date)
-  const [inputValue, setInputValue] = React.useState(formatDate(date))
+  const [inputValue, setInputValue] = React.useState(formatDateLong(date))
 
   React.useEffect(() => {
     if (defaultValue && !date) {
       const defaultDate = new Date(defaultValue)
       setDate(defaultDate)
       setMonth(defaultDate)
-      setInputValue(formatDate(defaultDate))
+      setInputValue(formatDateLong(defaultDate))
     }
   }, [defaultValue, date])
 
@@ -61,13 +51,13 @@ export function SinceDatePicker({ value, onChange, defaultValue }: SinceDatePick
       const newDate = new Date(value)
       setDate(newDate)
       setMonth(newDate)
-      setInputValue(formatDate(newDate))
+      setInputValue(formatDateLong(newDate))
     }
   }, [value, date])
 
   const handleDateSelect = (selectedDate: Date | undefined) => {
     setDate(selectedDate)
-    setInputValue(formatDate(selectedDate))
+    setInputValue(formatDateLong(selectedDate))
     if (selectedDate) {
       onChange(selectedDate.toISOString().split('T')[0])
     }

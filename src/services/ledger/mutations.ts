@@ -13,7 +13,9 @@ export const useCreateLedgerEntry = () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
       queryClient.invalidateQueries({ queryKey: ['account'] })
 
-      queryClient.invalidateQueries({ queryKey: ['summary'] })
+      // Invalidate all summary queries
+      queryClient.invalidateQueries({ queryKey: ['totalSummary'] })
+      queryClient.invalidateQueries({ queryKey: ['accountSummary'] })
 
       toast.success("Deposit created successfully")
     },
@@ -33,7 +35,9 @@ export const useSpreadYields = () => {
       queryClient.invalidateQueries({ queryKey: ['accounts'] })
       queryClient.invalidateQueries({ queryKey: ['account'] })
 
-      queryClient.invalidateQueries({ queryKey: ['summary'] })
+      // Invalidate all summary queries
+      queryClient.invalidateQueries({ queryKey: ['totalSummary'] })
+      queryClient.invalidateQueries({ queryKey: ['accountSummary'] })
 
       toast.success("Yields spread successfully")
     },
