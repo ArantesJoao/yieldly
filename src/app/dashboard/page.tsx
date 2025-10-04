@@ -6,10 +6,10 @@ import { useSession } from "next-auth/react"
 
 import { Title } from "@/components/ui/title"
 import { Skeleton } from "@/components/ui/skeleton"
-import AccountsCarousel from "../accounts/components/accountsCarousel"
 import { DebugPanel } from "./components/debugPanel"
 import YieldsTable from "@/components/data/yieldsTable"
 import BalanceGraph from "@/components/data/balanceGraph"
+import AccountsCarousel from "../accounts/components/accountsCarousel"
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -24,7 +24,7 @@ export default function DashboardPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-4 w-full pb-20">
+      <div className="flex flex-col gap-4 w-full pb-12">
         {sessionStatus === 'loading' ? (
           <Title className="flex items-center gap-2">Olá, <Skeleton className="h-10 w-48" /></Title>
         ) : (
@@ -32,7 +32,7 @@ export default function DashboardPage() {
         )}
         <AccountsCarousel />
         <YieldsTable />
-        <BalanceGraph period="Last 30 days" />
+        <BalanceGraph />
       </div>
       <DebugPanel />
     </>

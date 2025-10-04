@@ -9,10 +9,12 @@ import {
 import AccountCard from "../../../../components/accountCard/accountCard"
 import AccountCardSkeleton from "../../../../components/accountCard/accountCardSkeleton"
 import { useAccounts } from "@/services/accounts/queries"
+import { useCurrentAccount } from "@/contexts/currentAccountContext"
 import Dots from "./dots"
 
 const AccountsCarousel = () => {
   const { data: accounts, isLoading, isError } = useAccounts()
+  const { setCurrentAccountId } = useCurrentAccount()
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
 
@@ -27,6 +29,13 @@ const AccountsCarousel = () => {
       setCurrent(api.selectedScrollSnap())
     })
   }, [api, current, setCurrent])
+
+  // Set the current account ID when accounts load or carousel changes
+  React.useEffect(() => {
+    if (accounts && accounts.length > 0) {
+      setCurrentAccountId(accounts[current]?.id || null)
+    }
+  }, [accounts, current, setCurrentAccountId])
 
   if (isLoading && !accounts) {
     return (

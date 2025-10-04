@@ -77,8 +77,8 @@ export const POST = withAuth(async (request, session) => {
       ? convertDateToUTC(validatedData.startDate)
       : new Date()
 
-    // Find the "Deposit" increase type for this user
-    const depositType = await db.increaseType.findFirst({
+    // Find the "Deposit" transaction type for this user
+    const depositType = await db.transactionType.findFirst({
       where: {
         ownerUserId: BigInt(session.user.id),
         name: "Deposit"
@@ -86,7 +86,7 @@ export const POST = withAuth(async (request, session) => {
     })
 
     if (!depositType) {
-      return createErrorResponse('missing-increase-type', 'Deposit increase type not found', 400)
+      return createErrorResponse('missing-transaction-type', 'Deposit transaction type not found', 400)
     }
 
     // Create initial balance entry
@@ -94,7 +94,7 @@ export const POST = withAuth(async (request, session) => {
       data: {
         accountId: account.id,
         date: startDate,
-        increaseTypeId: depositType.id,
+        transactionTypeId: depositType.id,
         amountMinor: validatedData.initialBalanceMinor,
         note: "Initial balance"
       }

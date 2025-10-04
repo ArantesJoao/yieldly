@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { formatCurrency, formatCurrencyCompact, formatDateShort, getLocalDateString } from "@/utils/conversions";
-import { useTotalSummary } from "@/services/summary/queries";
+import { useAccountSummary } from "@/services/summary/queries";
+import { useCurrentAccount } from "@/contexts/currentAccountContext";
 import {
   Table,
   TableBody,
@@ -19,6 +20,8 @@ interface YieldsTableProps {
 }
 
 const YieldsTable = ({ dateRange }: YieldsTableProps) => {
+  const { currentAccountId } = useCurrentAccount();
+
   const toDate = useMemo(() => {
     return getLocalDateString(dateRange.to);
   }, [dateRange.to]);
@@ -27,7 +30,7 @@ const YieldsTable = ({ dateRange }: YieldsTableProps) => {
     return getLocalDateString(dateRange.from);
   }, [dateRange.from]);
 
-  const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate);
+  const { data: summaries, isLoading } = useAccountSummary(currentAccountId, fromDate, toDate);
 
   if (isLoading) {
     return <YieldsTableSkeleton />;
