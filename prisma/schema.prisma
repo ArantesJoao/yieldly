@@ -13,6 +13,11 @@ enum Role {
   viewer
 }
 
+enum TransactionDirection {
+  inflow
+  outflow
+}
+
 model User {
   id        BigInt   @id @default(autoincrement())
   email     String   @unique
@@ -21,8 +26,8 @@ model User {
   timezone  String   @default("America/Sao_Paulo")
   createdAt DateTime @default(now())
 
-  accounts      Account[]
-  increaseTypes IncreaseType[]
+  accounts         Account[]
+  transactionTypes TransactionType[]
 }
 
 model Account {
@@ -39,10 +44,11 @@ model Account {
   @@index([ownerUserId])
 }
 
-model IncreaseType {
-  id          BigInt @id @default(autoincrement())
+model TransactionType {
+  id          BigInt               @id @default(autoincrement())
   ownerUserId BigInt
   name        String
+  direction   TransactionDirection
 
   owner  User          @relation(fields: [ownerUserId], references: [id], onDelete: Cascade)
   ledger LedgerEntry[]
@@ -52,20 +58,20 @@ model IncreaseType {
 }
 
 model LedgerEntry {
-  id             BigInt   @id @default(autoincrement())
-  accountId      BigInt
-  date           DateTime
-  increaseTypeId BigInt
-  amountMinor    Int
-  note           String?
-  createdAt      DateTime @default(now())
+  id                BigInt   @id @default(autoincrement())
+  accountId         BigInt
+  date              DateTime
+  transactionTypeId BigInt
+  amountMinor       Int
+  note              String?
+  createdAt         DateTime @default(now())
 
-  account      Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  increaseType IncreaseType @relation(fields: [increaseTypeId], references: [id])
+  account         Account         @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  transactionType TransactionType @relation(fields: [transactionTypeId], references: [id])
 
   @@index([accountId, date])
-  @@index([increaseTypeId, date])
-  @@index([accountId, increaseTypeId, date])
+  @@index([transactionTypeId, date])
+  @@index([accountId, transactionTypeId, date])
 }
 
 model DailyAccountSummary {
@@ -74,7 +80,7 @@ model DailyAccountSummary {
   date               DateTime
   balanceEndMinor    Int
   yieldsMinor        Int
-  contributionsMinor Int
+  depositsMinor Int
 
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 

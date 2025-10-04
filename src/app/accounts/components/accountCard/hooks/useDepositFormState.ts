@@ -2,16 +2,16 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useMemo } from 'react'
-import { useIncreaseTypes } from '@/services/increase-types/queries'
+import { useTransactionTypes } from '@/services/transaction-types/queries'
 
 export const depositSchema = z.object({
   amount: z.number().positive("Amount must be positive").multipleOf(0.01, "Amount must have at most 2 decimal places"),
-  increaseTypeId: z.string().min(1, "Please select a deposit type"),
+  transactionTypeId: z.string().min(1, "Please select a transaction type"),
   note: z.string().max(500, "Note must be less than 500 characters").optional(),
   newBalanceInput: z.number().optional(),
   sinceDate: z.string().optional(),
 }).refine((data) => {
-  // If increaseTypeId is for "Yields", sinceDate is required
+  // If transactionTypeId is for "Yields", sinceDate is required
   // We can't check the name here, so we'll validate in the component
   return true
 }, {
@@ -22,13 +22,13 @@ export const depositSchema = z.object({
 export type DepositFormValues = z.infer<typeof depositSchema>
 
 export function useDepositFormState() {
-  const { data: increaseTypes, isLoading: isLoadingIncreaseTypes } = useIncreaseTypes()
+  const { data: transactionTypes, isLoading: isLoadingTransactionTypes } = useTransactionTypes()
 
   const form = useForm<DepositFormValues>({
     resolver: zodResolver(depositSchema),
     defaultValues: {
       amount: 0,
-      increaseTypeId: "",
+      transactionTypeId: "",
       note: "",
       newBalanceInput: undefined,
       sinceDate: "",
@@ -36,25 +36,25 @@ export function useDepositFormState() {
   })
 
   const watchAmount = form.watch("amount")
-  const watchIncreaseTypeId = form.watch("increaseTypeId")
+  const watchTransactionTypeId = form.watch("transactionTypeId")
   const watchNewBalanceInput = form.watch("newBalanceInput")
   const watchSinceDate = form.watch("sinceDate")
 
-  const selectedIncreaseType = useMemo(() => {
-    return increaseTypes?.find(type => type.id === watchIncreaseTypeId)
-  }, [increaseTypes, watchIncreaseTypeId])
+  const selectedTransactionType = useMemo(() => {
+    return transactionTypes?.find(type => type.id === watchTransactionTypeId)
+  }, [transactionTypes, watchTransactionTypeId])
 
-  const isYieldsType = selectedIncreaseType?.name === "Yields"
+  const isYieldsType = selectedTransactionType?.name === "Yields"
 
   return {
     form,
-    increaseTypes,
-    isLoadingIncreaseTypes,
+    transactionTypes,
+    isLoadingTransactionTypes,
     watchAmount,
-    watchIncreaseTypeId,
+    watchTransactionTypeId,
     watchNewBalanceInput,
     watchSinceDate,
-    selectedIncreaseType,
+    selectedTransactionType,
     isYieldsType,
   }
 }

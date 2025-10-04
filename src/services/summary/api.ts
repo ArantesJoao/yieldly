@@ -4,13 +4,15 @@ interface DailySummary {
   date: string
   balanceEndMinor: number
   yieldsMinor: number
-  contributionsMinor: number
+  depositsMinor: number
 }
 
 export const getTotalSummary = async (from: string, to: string): Promise<DailySummary[]> => {
   const response = await httpClient<DailySummary[]>(
     `/api/summary/total?from=${from}&to=${to}`
   )
+
+  console.log(response.data)
   return response.data
 }
 

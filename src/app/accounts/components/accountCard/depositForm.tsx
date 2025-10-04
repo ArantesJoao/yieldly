@@ -30,8 +30,8 @@ interface DepositFormProps {
 const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFormProps) => {
   const {
     form,
-    increaseTypes,
-    isLoadingIncreaseTypes,
+    transactionTypes,
+    isLoadingTransactionTypes,
     watchAmount,
     watchNewBalanceInput,
     isYieldsType,
@@ -124,18 +124,18 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
 
         <FormField
           control={form.control}
-          name="increaseTypeId"
+          name="transactionTypeId"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Deposit Type</FormLabel>
+              <FormLabel>Transaction Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger disabled={isLoadingIncreaseTypes}>
-                    <SelectValue placeholder="Select a deposit type" />
+                  <SelectTrigger disabled={isLoadingTransactionTypes}>
+                    <SelectValue placeholder="Select a transaction type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {increaseTypes?.map((type) => (
+                  {transactionTypes?.filter(type => type.direction === 'inflow').map((type) => (
                     <SelectItem key={type.id} value={type.id}>
                       {type.name}
                     </SelectItem>

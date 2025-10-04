@@ -31,16 +31,18 @@ export const authOptions = {
             }
           })
 
-          // Seed default increase types for new users
-          await db.increaseType.createMany({
+          // Seed default transaction types for new users
+          await db.transactionType.createMany({
             data: [
               {
                 ownerUserId: user.id,
-                name: "Deposit"
+                name: "Deposit",
+                direction: "inflow"
               },
               {
                 ownerUserId: user.id,
-                name: "Yields"
+                name: "Yields",
+                direction: "inflow"
               }
             ]
           })

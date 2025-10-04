@@ -26,7 +26,7 @@ export function useDepositSubmit({ accountId, toggleDialog, isYieldsType }: UseD
       // Use spread endpoint for Yields type
       await spreadYields({
         accountId,
-        increaseTypeId: values.increaseTypeId,
+        transactionTypeId: values.transactionTypeId,
         totalAmountMinor: amountMinor,
         startDate: values.sinceDate,
         endDate: today,
@@ -41,7 +41,7 @@ export function useDepositSubmit({ accountId, toggleDialog, isYieldsType }: UseD
       await createLedgerEntry({
         accountId,
         date: today,
-        increaseTypeId: values.increaseTypeId,
+        transactionTypeId: values.transactionTypeId,
         amountMinor,
         note: values.note || undefined,
       }, {

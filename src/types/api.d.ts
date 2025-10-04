@@ -45,16 +45,28 @@ export interface Account {
 export interface CreateLedgerEntryData {
   accountId: string
   date: string
-  increaseTypeId: string
+  transactionTypeId: string
   amountMinor: number
   note?: string
 }
 
 export interface SpreadYieldsData {
   accountId: string
-  increaseTypeId: string
+  transactionTypeId: string
   totalAmountMinor: number
   startDate: string
   endDate: string
   roundingMode?: "lastDayGetsRemainder"
+}
+
+export interface TransactionType {
+  id: string
+  ownerUserId: string
+  name: string
+  direction: "inflow" | "outflow"
+}
+
+export interface CreateTransactionTypeData {
+  name: string
+  direction: "inflow" | "outflow"
 }

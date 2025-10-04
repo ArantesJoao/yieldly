@@ -10,10 +10,10 @@ type AuthAction =
   | "ledger:read"
   | "ledger:update"
   | "ledger:delete"
-  | "increase-type:create"
-  | "increase-type:read"
-  | "increase-type:update"
-  | "increase-type:delete"
+  | "transaction-type:create"
+  | "transaction-type:read"
+  | "transaction-type:update"
+  | "transaction-type:delete"
   | "summary:read"
 
 type AuthContext = {

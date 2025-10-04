@@ -2,15 +2,15 @@ import { NextResponse } from "next/server"
 import { db } from "@/lib/db"
 import { withAuth, parseJsonBody } from "@/lib/api"
 import { authorize } from "@/lib/authorization"
-import { createIncreaseTypeSchema } from "@/lib/validations"
+import { createTransactionTypeSchema } from "@/lib/validations"
 
 export const GET = withAuth(async (request, session) => {
-  await authorize("increase-type:read", {
+  await authorize("transaction-type:read", {
     userId: session.user.id,
     role: session.user.role
   })
 
-  const increaseTypes = await db.increaseType.findMany({
+  const transactionTypes = await db.transactionType.findMany({
     where: {
       ownerUserId: BigInt(session.user.id)
     },
@@ -19,7 +19,7 @@ export const GET = withAuth(async (request, session) => {
     }
   })
 
-  const serializedTypes = increaseTypes.map(type => ({
+  const serializedTypes = transactionTypes.map(type => ({
     ...type,
     id: type.id.toString(),
     ownerUserId: type.ownerUserId.toString()
@@ -29,26 +29,28 @@ export const GET = withAuth(async (request, session) => {
 })
 
 export const POST = withAuth(async (request, session) => {
-  await authorize("increase-type:create", {
+  await authorize("transaction-type:create", {
     userId: session.user.id,
     role: session.user.role
   })
 
   const body = await parseJsonBody(request)
-  const validatedData = createIncreaseTypeSchema.parse(body)
+  const validatedData = createTransactionTypeSchema.parse(body)
 
-  const increaseType = await db.increaseType.create({
+  const transactionType = await db.transactionType.create({
     data: {
       ownerUserId: BigInt(session.user.id),
-      name: validatedData.name
+      name: validatedData.name,
+      direction: validatedData.direction
     }
   })
 
   const serializedType = {
-    ...increaseType,
-    id: increaseType.id.toString(),
-    ownerUserId: increaseType.ownerUserId.toString()
+    ...transactionType,
+    id: transactionType.id.toString(),
+    ownerUserId: transactionType.ownerUserId.toString()
   }
 
   return NextResponse.json(serializedType, { status: 201 })
 })
+

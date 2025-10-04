@@ -189,7 +189,7 @@ export function DebugPanel() {
                             <th className="text-left p-2 font-semibold">Date</th>
                             <th className="text-right p-2 font-semibold">Balance</th>
                             <th className="text-right p-2 font-semibold">Yields</th>
-                            <th className="text-right p-2 font-semibold">Contributions</th>
+                            <th className="text-right p-2 font-semibold">Deposits</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -206,7 +206,7 @@ export function DebugPanel() {
                                 {summary.yieldsMinor > 0 ? formatCurrency(summary.yieldsMinor, "BRL") : '-'}
                               </td>
                               <td className="p-2 text-right font-mono text-blue-600 dark:text-blue-400">
-                                {summary.contributionsMinor > 0 ? formatCurrency(summary.contributionsMinor, "BRL") : '-'}
+                                {summary.depositsMinor > 0 ? formatCurrency(summary.depositsMinor, "BRL") : '-'}
                               </td>
                             </tr>
                           ))}

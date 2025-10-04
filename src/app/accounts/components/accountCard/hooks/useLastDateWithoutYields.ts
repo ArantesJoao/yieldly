@@ -29,7 +29,7 @@ export function useLastDateWithoutYields({
   const { data: summaries } = useQuery({
     queryKey: ['accountSummary', accountId, oneYearAgo, today],
     queryFn: () => getAccountSummary(accountId, oneYearAgo, today),
-    enabled: isYieldsType && !!accountId,
+    enabled: !!accountId,
   })
 
   const lastDateWithoutYields = useMemo(() => {

@@ -12,7 +12,7 @@ export const GET = withAuth(async (request, session) => {
     accountId: searchParams.get('accountId'),
     from: searchParams.get('from'),
     to: searchParams.get('to'),
-    increaseTypeId: searchParams.get('increaseTypeId') || undefined
+    transactionTypeId: searchParams.get('transactionTypeId') || undefined
   })
 
   // Check if user owns the account
@@ -36,7 +36,7 @@ export const GET = withAuth(async (request, session) => {
       gte: Date
       lte: Date
     }
-    increaseTypeId?: bigint
+    transactionTypeId?: bigint
   }
 
   const where: LedgerWhereClause = {
@@ -47,14 +47,14 @@ export const GET = withAuth(async (request, session) => {
     }
   }
 
-  if (queryData.increaseTypeId) {
-    where.increaseTypeId = queryData.increaseTypeId
+  if (queryData.transactionTypeId) {
+    where.transactionTypeId = queryData.transactionTypeId
   }
 
   const entries = await db.ledgerEntry.findMany({
     where,
     include: {
-      increaseType: true
+      transactionType: true
     },
     orderBy: {
       date: 'asc'
@@ -65,12 +65,12 @@ export const GET = withAuth(async (request, session) => {
     ...entry,
     id: entry.id.toString(),
     accountId: entry.accountId.toString(),
-    increaseTypeId: entry.increaseTypeId.toString(),
+    transactionTypeId: entry.transactionTypeId.toString(),
     date: entry.date.toISOString().split('T')[0],
-    increaseType: {
-      ...entry.increaseType,
-      id: entry.increaseType.id.toString(),
-      ownerUserId: entry.increaseType.ownerUserId.toString()
+    transactionType: {
+      ...entry.transactionType,
+      id: entry.transactionType.id.toString(),
+      ownerUserId: entry.transactionType.ownerUserId.toString()
     }
   }))
 
@@ -99,17 +99,17 @@ export const POST = withAuth(async (request, session) => {
     return createErrorResponse('forbidden', 'Account not owned by user', 403)
   }
 
-  // Check if user owns the increase type
-  const increaseType = await db.increaseType.findUnique({
-    where: { id: validatedData.increaseTypeId }
+  // Check if user owns the transaction type
+  const transactionType = await db.transactionType.findUnique({
+    where: { id: validatedData.transactionTypeId }
   })
 
-  if (!increaseType) {
-    return createErrorResponse('not-found', 'Increase type not found', 404)
+  if (!transactionType) {
+    return createErrorResponse('not-found', 'Transaction type not found', 404)
   }
 
-  if (increaseType.ownerUserId.toString() !== session.user.id) {
-    return createErrorResponse('forbidden', 'Increase type not owned by user', 403)
+  if (transactionType.ownerUserId.toString() !== session.user.id) {
+    return createErrorResponse('forbidden', 'Transaction type not owned by user', 403)
   }
 
   const date = convertDateToUTC(validatedData.date)
@@ -118,12 +118,12 @@ export const POST = withAuth(async (request, session) => {
     data: {
       accountId: validatedData.accountId,
       date,
-      increaseTypeId: validatedData.increaseTypeId,
+      transactionTypeId: validatedData.transactionTypeId,
       amountMinor: validatedData.amountMinor,
       note: validatedData.note
     },
     include: {
-      increaseType: true
+      transactionType: true
     }
   })
 
@@ -134,12 +134,12 @@ export const POST = withAuth(async (request, session) => {
     ...entry,
     id: entry.id.toString(),
     accountId: entry.accountId.toString(),
-    increaseTypeId: entry.increaseTypeId.toString(),
+    transactionTypeId: entry.transactionTypeId.toString(),
     date: entry.date.toISOString().split('T')[0],
-    increaseType: {
-      ...entry.increaseType,
-      id: entry.increaseType.id.toString(),
-      ownerUserId: entry.increaseType.ownerUserId.toString()
+    transactionType: {
+      ...entry.transactionType,
+      id: entry.transactionType.id.toString(),
+      ownerUserId: entry.transactionType.ownerUserId.toString()
     }
   }
 

@@ -9,17 +9,17 @@ export async function updateDailyAccountSummary(accountId: bigint, date: Date) {
       date
     },
     include: {
-      increaseType: true
+      transactionType: true
     }
   })
 
   // Calculate totals for the day
   const dayTotal = dayEntries.reduce((sum, entry) => sum + entry.amountMinor, 0)
   const yieldsMinor = dayEntries
-    .filter(entry => entry.increaseType.name === "Yields")
+    .filter(entry => entry.transactionType.name === "Yields")
     .reduce((sum, entry) => sum + entry.amountMinor, 0)
-  const contributionsMinor = dayEntries
-    .filter(entry => entry.increaseType.name === "Contribution")
+  const depositsMinor = dayEntries
+    .filter(entry => entry.transactionType.name === "Deposit")
     .reduce((sum, entry) => sum + entry.amountMinor, 0)
 
   // Get previous day's balance
@@ -49,14 +49,14 @@ export async function updateDailyAccountSummary(accountId: bigint, date: Date) {
     update: {
       balanceEndMinor,
       yieldsMinor,
-      contributionsMinor
+      depositsMinor
     },
     create: {
       accountId,
       date,
       balanceEndMinor,
       yieldsMinor,
-      contributionsMinor
+      depositsMinor
     }
   })
 
@@ -82,7 +82,7 @@ async function rollForwardBalances(accountId: bigint, fromDate: Date) {
 
   // Update each future summary with correct balance
   for (const summary of futureSummaries) {
-    const dayTotal = summary.yieldsMinor + summary.contributionsMinor
+    const dayTotal = summary.yieldsMinor + summary.depositsMinor
     currentBalance += dayTotal
 
     await db.dailyAccountSummary.update({
@@ -134,7 +134,7 @@ export async function getAccountSummary(
     date: summary.date.toISOString().split('T')[0],
     balanceEndMinor: summary.balanceEndMinor,
     yieldsMinor: summary.yieldsMinor,
-    contributionsMinor: summary.contributionsMinor
+    depositsMinor: summary.depositsMinor
   }))
 }
 
@@ -166,7 +166,7 @@ export async function getTotalSummary(
     date: string
     balanceEndMinor: number
     yieldsMinor: number
-    contributionsMinor: number
+    depositsMinor: number
   }
 
   // Group by date and sum across accounts
@@ -178,13 +178,13 @@ export async function getTotalSummary(
         date: dateKey,
         balanceEndMinor: 0,
         yieldsMinor: 0,
-        contributionsMinor: 0
+        depositsMinor: 0
       }
     }
 
     acc[dateKey].balanceEndMinor += summary.balanceEndMinor
     acc[dateKey].yieldsMinor += summary.yieldsMinor
-    acc[dateKey].contributionsMinor += summary.contributionsMinor
+    acc[dateKey].depositsMinor += summary.depositsMinor
 
     return acc
   }, {} as Record<string, DailySummary>)

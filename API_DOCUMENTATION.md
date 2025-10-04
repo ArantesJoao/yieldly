@@ -2,7 +2,7 @@
 
 ## Overview
 
-Yieldly is a personal investment tracker focused on logging balances and increases with simple, user-controlled semantics, especially for Brazil-centric fixed-income workflows. This document provides comprehensive API documentation for backend integration.
+Yieldly is a personal investment tracker focused on logging balances and transactions with simple, user-controlled semantics, especially for Brazil-centric fixed-income workflows. This document provides comprehensive API documentation for backend integration.
 
 ## Table of Contents
 
@@ -107,13 +107,13 @@ The database uses PostgreSQL with the following main entities:
 
 - **User**: Authentication and user preferences
 - **Account**: Investment accounts grouped by institution
-- **IncreaseType**: User-defined categories (seeded with "Deposit" and "Yields")
+- **TransactionType**: User-defined categories with direction (inflow/outflow), seeded with "Deposit" and "Yields" as inflows
 - **LedgerEntry**: Individual balance movements
 - **DailyAccountSummary**: Pre-aggregated daily summaries for fast queries
 
 ### Auto-Seeding
 
-When a user first logs in, the system automatically creates two default increase types:
+When a user first logs in, the system automatically creates two default transaction types (both with direction="inflow"):
 - **"Deposit"** - for deposits and initial balances
 - **"Yields"** - for investment yields
 
@@ -162,7 +162,7 @@ Creates a new account.
 **Response:** Created account object with 201 status.
 
 **Behavior:**
-- If `initialBalanceMinor` is provided, creates a LedgerEntry with IncreaseType="Deposit" and note="Initial balance"
+- If `initialBalanceMinor` is provided, creates a LedgerEntry with TransactionType="Deposit" and note="Initial balance"
 - Updates DailyAccountSummary for the affected date
 - Members limited to 1 account total
 
@@ -178,10 +178,10 @@ Deletes an account (admin or owner only).
 
 ---
 
-### Increase Types
+### Transaction Types
 
-#### `GET /api/increase-types`
-Returns all increase types for the authenticated user.
+#### `GET /api/transaction-types`
+Returns all transaction types for the authenticated user.
 
 **Response:**
 ```json
@@ -199,24 +199,25 @@ Returns all increase types for the authenticated user.
 ]
 ```
 
-#### `POST /api/increase-types`
-Creates a new increase type.
+#### `POST /api/transaction-types`
+Creates a new transaction type.
 
 **Request Body:**
 ```json
 {
-  "name": "string"  // Required, max 50 chars, unique per user
+  "name": "string",           // Required, max 50 chars, unique per user
+  "direction": "inflow" | "outflow"  // Required, "inflow" for deposits/income, "outflow" for withdrawals/expenses
 }
 ```
 
-**Response:** Created increase type with 201 status.
+**Response:** Created transaction type with 201 status.
 
 **Behavior:**
 - Name must be unique per user (enforced by database constraint)
 - Cannot create types named "Deposit" or "Yields" if they already exist
 
-#### `DELETE /api/increase-types/{id}`
-Deletes an increase type (admin or owner only).
+#### `DELETE /api/transaction-types/{id}`
+Deletes a transaction type (admin or owner only).
 
 **Restrictions:**
 - Cannot delete default types: "Deposit" and "Yields"
@@ -233,7 +234,7 @@ Queries ledger entries with filters.
 - `accountId`: Required, BigInt as string
 - `from`: Required, YYYY-MM-DD format
 - `to`: Required, YYYY-MM-DD format  
-- `increaseTypeId`: Optional, BigInt as string
+- `transactionTypeId`: Optional, BigInt as string
 
 **Response:**
 ```json
@@ -242,14 +243,15 @@ Queries ledger entries with filters.
     "id": "1",
     "accountId": "1",
     "date": "2025-01-01",
-    "increaseTypeId": "1",
+    "transactionTypeId": "1",
     "amountMinor": 100000,
     "note": "Initial deposit",
     "createdAt": "2025-01-01T00:00:00.000Z",
-    "increaseType": {
+    "transactionType": {
       "id": "1",
       "ownerUserId": "1", 
-      "name": "Contribution"
+      "name": "Deposit",
+      "direction": "inflow"
     }
   }
 ]
@@ -263,8 +265,8 @@ Creates a single ledger entry.
 {
   "accountId": "1",             // Required, BigInt as string
   "date": "2025-01-01",         // Required, YYYY-MM-DD format
-  "increaseTypeId": "1",        // Required, BigInt as string
-  "amountMinor": 100000,        // Required, integer (can be negative)
+  "transactionTypeId": "1",     // Required, BigInt as string
+  "amountMinor": 100000,        // Required, integer (always positive, direction determined by TransactionType)
   "note": "Optional note"       // Optional, max 500 chars
 }
 ```
@@ -282,7 +284,7 @@ Distributes a lump sum across multiple days.
 ```json
 {
   "accountId": "1",                    // Required, BigInt as string
-  "increaseTypeId": "2",               // Required, typically "Yields"
+  "transactionTypeId": "2",            // Required, typically "Yields"
   "totalAmountMinor": 100000,          // Required, integer >= 0 (R$1000.00)
   "startDate": "2025-01-01",           // Required, YYYY-MM-DD (inclusive)
   "endDate": "2025-01-10",             // Required, YYYY-MM-DD (inclusive)
@@ -324,7 +326,7 @@ Returns daily summaries for a specific account.
     "date": "2025-01-01",
     "balanceEndMinor": 100000,
     "yieldsMinor": 5000,
-    "contributionsMinor": 95000
+    "depositsMinor": 95000
   }
 ]
 ```
@@ -418,7 +420,7 @@ const account = await fetch('/api/accounts', {
 
 // This automatically creates:
 // 1. Account record
-// 2. LedgerEntry with IncreaseType="Contribution" 
+// 2. LedgerEntry with TransactionType="Deposit" (direction="inflow")
 // 3. DailyAccountSummary for 2025-01-01
 ```
 
@@ -431,7 +433,7 @@ const spread = await fetch('/api/ledger/spread', {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     accountId: '1',
-    increaseTypeId: '2', // "Yields" 
+    transactionTypeId: '2', // "Yields" 
     totalAmountMinor: 10000, // R$ 100.00
     startDate: '2025-01-01',
     endDate: '2025-01-10'

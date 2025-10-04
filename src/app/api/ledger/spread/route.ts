@@ -27,17 +27,17 @@ export const POST = withAuth(async (request, session) => {
     return createErrorResponse('forbidden', 'Account not owned by user', 403)
   }
 
-  // Check if user owns the increase type
-  const increaseType = await db.increaseType.findUnique({
-    where: { id: validatedData.increaseTypeId }
+  // Check if user owns the transaction type
+  const transactionType = await db.transactionType.findUnique({
+    where: { id: validatedData.transactionTypeId }
   })
 
-  if (!increaseType) {
-    return createErrorResponse('not-found', 'Increase type not found', 404)
+  if (!transactionType) {
+    return createErrorResponse('not-found', 'Transaction type not found', 404)
   }
 
-  if (increaseType.ownerUserId.toString() !== session.user.id) {
-    return createErrorResponse('forbidden', 'Increase type not owned by user', 403)
+  if (transactionType.ownerUserId.toString() !== session.user.id) {
+    return createErrorResponse('forbidden', 'Transaction type not owned by user', 403)
   }
 
   const startDate = convertDateToUTC(validatedData.startDate)
@@ -52,7 +52,6 @@ export const POST = withAuth(async (request, session) => {
 
   // Create entries for each day
   const entries = []
-  const summaryUpdates = []
 
   for (let i = 0; i < daysDiff; i++) {
     const currentDate = new Date(startDate)
@@ -65,18 +64,17 @@ export const POST = withAuth(async (request, session) => {
       data: {
         accountId: validatedData.accountId,
         date: currentDate,
-        increaseTypeId: validatedData.increaseTypeId,
+        transactionTypeId: validatedData.transactionTypeId,
         amountMinor: amount,
         note: `Spread entry ${i + 1}/${daysDiff}`
       }
     })
 
     entries.push(entry)
-    summaryUpdates.push(updateDailyAccountSummary(validatedData.accountId, currentDate))
-  }
 
-  // Wait for all summary updates to complete
-  await Promise.all(summaryUpdates)
+    // Update summary sequentially so previous day's balance is available
+    await updateDailyAccountSummary(validatedData.accountId, currentDate)
+  }
 
   return NextResponse.json({
     inserted: daysDiff,
@@ -84,7 +82,7 @@ export const POST = withAuth(async (request, session) => {
       ...entry,
       id: entry.id.toString(),
       accountId: entry.accountId.toString(),
-      increaseTypeId: entry.increaseTypeId.toString(),
+      transactionTypeId: entry.transactionTypeId.toString(),
       date: entry.date.toISOString().split('T')[0]
     }))
   }, { status: 201 })
