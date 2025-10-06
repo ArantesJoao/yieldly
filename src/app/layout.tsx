@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Open_Sans } from "next/font/google";
 
 import "./globals.css";
@@ -11,12 +11,42 @@ const openSans = Open_Sans({
   subsets: ["latin"],
 });
 
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: "Yieldly",
   description: "Personal Investment Tracker",
+  applicationName: "Yieldly",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Yieldly",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Yieldly",
+    title: "Yieldly - Personal Investment Tracker",
+    description: "Track your personal investments and yields with ease",
+  },
+  twitter: {
+    card: "summary",
+    title: "Yieldly - Personal Investment Tracker",
+    description: "Track your personal investments and yields with ease",
+  },
   icons: {
     icon: '/favicon.ico',
+    apple: '/icons/web-app-manifest-192x192.png',
   },
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({

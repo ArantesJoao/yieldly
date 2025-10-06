@@ -48,6 +48,7 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/next-auth": "^3.13.0",
