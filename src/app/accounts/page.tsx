@@ -1,15 +1,7 @@
-"use client"
+import AccountsClient from "./accountsClient"
 
-import Controls from "./components/controls"
-import AccountsList from "./components/accountsList"
+export const dynamic = 'force-dynamic'
 
-const AccountsPage = () => {
-  return (
-    <div>
-      <Controls />
-      <AccountsList />
-    </div>
-  )
+export default function AccountsPage() {
+  return <AccountsClient />
 }
-
-export default AccountsPage

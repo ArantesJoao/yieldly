@@ -10,9 +10,8 @@ export const depositSchema = z.object({
   note: z.string().max(500, "Note must be less than 500 characters").optional(),
   newBalanceInput: z.number().optional(),
   sinceDate: z.string().optional(),
-}).refine((data) => {
-  // If transactionTypeId is for "Yields", sinceDate is required
-  // We can't check the name here, so we'll validate in the component
+}).refine(() => {
+  // If transactionTypeId is for "Yields", sinceDate is required, can't validate in the schema
   return true
 }, {
   message: "Since date is required for Yields type",

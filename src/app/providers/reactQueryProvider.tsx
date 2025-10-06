@@ -1,18 +1,34 @@
 "use client"
 
-import { useState } from "react";
-
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
-  const [queryClient] = useState(() => new QueryClient({
+// Make QueryClient creation SSR-safe
+function makeQueryClient() {
+  return new QueryClient({
     defaultOptions: {
       queries: {
-        structuralSharing: false
+        staleTime: 60 * 1000,
+        structuralSharing: false,
       },
-    }
-  }));
+    },
+  });
+}
+
+let browserQueryClient: QueryClient | undefined = undefined;
+
+function getQueryClient() {
+  if (typeof window === 'undefined') {
+    return makeQueryClient();
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+}
+
+const ReactQueryProvider = ({ children }: { children: React.ReactNode }) => {
+  const queryClient = getQueryClient();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />

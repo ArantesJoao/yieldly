@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import LanguageSwitcher from "./language-switcher"
-import CurrencySwitcher from "./currency-switcher"
+// import CurrencySwitcher from "./currency-switcher"
 
 interface NavItem {
   id: string
