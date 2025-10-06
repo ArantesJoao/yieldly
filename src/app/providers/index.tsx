@@ -11,15 +11,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <LanguageProvider>
-        <CurrencyProvider>
-          <ReactQueryProvider>
+        <ReactQueryProvider>
+          <CurrencyProvider>
             <CurrentAccountProvider>
               <AppDateProvider>
                 {children}
               </AppDateProvider>
             </CurrentAccountProvider>
-          </ReactQueryProvider>
-        </CurrencyProvider>
+          </CurrencyProvider>
+        </ReactQueryProvider>
       </LanguageProvider>
     </SessionProvider>
   )
