@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import '@/lib/i18n' // Initialize i18n
+import '@/lib/i18n'
 
 type Locale = 'pt-BR' | 'en-US'
 

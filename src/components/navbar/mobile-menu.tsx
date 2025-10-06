@@ -1,3 +1,7 @@
+import { useTranslation } from "react-i18next"
+import LanguageSwitcher from "./language-switcher"
+import CurrencySwitcher from "./currency-switcher"
+
 interface NavItem {
   id: string
   label: string
@@ -10,9 +14,6 @@ interface MobileMenuProps {
   onClose: () => void
   onNavigate: (id: string) => void
 }
-
-import { LanguageSwitcher } from "./language-switcher"
-import { useTranslation } from "react-i18next"
 
 export function MobileMenu({
   isOpen,
@@ -122,9 +123,8 @@ export function MobileMenu({
                   </svg>
                 </button>
               ))}
-
-              {/* Language Switcher */}
-              <div style={{ transitionDelay: isOpen ? `${navItems.length * 50}ms` : '0ms' }}>
+              <div className="flex gap-2 justify-end">
+                {/* <CurrencySwitcher /> */}
                 <LanguageSwitcher />
               </div>
             </nav>
