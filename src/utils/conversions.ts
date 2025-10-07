@@ -3,7 +3,7 @@
 // ============================================================================
 
 export function convertToMinor(amount: number) {
-  return amount * 100
+  return Math.round(amount * 100)
 }
 
 export function convertToMajor(amount: number) {
@@ -106,7 +106,7 @@ export function formatDateShort(dateStr: string, locale: string = 'pt-BR'): stri
   const [year, month, day] = dateStr.split('-').map(Number);
   const date = new Date(year, month - 1, day);
   const dateFnsLocale = getDateFnsLocale(locale)
-  
+
   // Format: "5 jan" for PT-BR, "Jan 5" for en-US
   return format(date, locale === 'pt-BR' ? 'd MMM' : 'MMM d', { locale: dateFnsLocale })
 }
@@ -122,10 +122,10 @@ export function formatDateLong(date: Date | undefined, locale: string = 'pt-BR')
   }
 
   const dateFnsLocale = getDateFnsLocale(locale)
-  
+
   // Format: "05 de janeiro de 2024" for PT-BR, "January 05, 2024" for en-US
-  return format(date, locale === 'pt-BR' ? "dd 'de' MMMM 'de' yyyy" : 'MMMM dd, yyyy', { 
-    locale: dateFnsLocale 
+  return format(date, locale === 'pt-BR' ? "dd 'de' MMMM 'de' yyyy" : 'MMMM dd, yyyy', {
+    locale: dateFnsLocale
   })
 }
 
