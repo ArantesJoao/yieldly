@@ -316,8 +316,14 @@ Returns daily summaries for a specific account.
 
 **Query Parameters:**
 - `accountId`: Required, BigInt as string
-- `from`: Required, YYYY-MM-DD format
-- `to`: Required, YYYY-MM-DD format
+- `from`: Optional, YYYY-MM-DD format (omit for all-time data)
+- `to`: Optional, YYYY-MM-DD format (omit for all-time data)
+
+**Examples:**
+- `/api/summary/account?accountId=1` - All-time data for account 1
+- `/api/summary/account?accountId=1&from=2025-01-01` - From Jan 1st onwards
+- `/api/summary/account?accountId=1&to=2025-12-31` - Up to Dec 31st
+- `/api/summary/account?accountId=1&from=2025-01-01&to=2025-12-31` - Specific range
 
 **Response:**
 ```json
@@ -335,8 +341,14 @@ Returns daily summaries for a specific account.
 Returns daily totals across all user's accounts.
 
 **Query Parameters:**
-- `from`: Required, YYYY-MM-DD format
-- `to`: Required, YYYY-MM-DD format
+- `from`: Optional, YYYY-MM-DD format (omit for all-time data)
+- `to`: Optional, YYYY-MM-DD format (omit for all-time data)
+
+**Examples:**
+- `/api/summary/total` - All-time data across all accounts
+- `/api/summary/total?from=2025-01-01` - From Jan 1st onwards
+- `/api/summary/total?to=2025-12-31` - Up to Dec 31st
+- `/api/summary/total?from=2025-01-01&to=2025-12-31` - Specific range
 
 **Response:** Same format as account summary, but aggregated across all accounts.
 
@@ -449,13 +461,17 @@ const spread = await fetch('/api/ledger/spread', {
 ### Example: Getting Summary Data
 
 ```javascript
-// Get total portfolio summary for last 30 days
+// Get all-time total portfolio summary
+const allTimeSummary = await fetch('/api/summary/total')
+const allTimeData = await allTimeSummary.json()
+// Returns all daily totals across all user's accounts
+
+// Get total portfolio summary for specific date range
 const summary = await fetch(
   '/api/summary/total?from=2025-01-01&to=2025-01-30'
 )
-
 const data = await summary.json()
-// Returns daily totals across all user's accounts
+// Returns daily totals across all user's accounts for the specified period
 ```
 
 ## Development Notes
@@ -502,7 +518,8 @@ npx prisma migrate deploy
 
 - DailyAccountSummary enables fast chart queries
 - Proper indexes defined in Prisma schema
-- Date range queries should always be scoped
+- Date range queries are optional; omit `from`/`to` for all-time data
+- For large datasets, consider using date ranges to limit response size
 - No caching required for v1 (designed for solo use)
 
 ---

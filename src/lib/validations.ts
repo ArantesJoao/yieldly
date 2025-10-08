@@ -47,8 +47,8 @@ export const ledgerQuerySchema = z.object({
 })
 
 export const summaryQuerySchema = z.object({
-  from: dateStringSchema,
-  to: dateStringSchema
+  from: dateStringSchema.optional(),
+  to: dateStringSchema.optional()
 })
 
 export const accountSummaryQuerySchema = summaryQuerySchema.extend({

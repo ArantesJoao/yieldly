@@ -111,19 +111,18 @@ async function getCurrentBalance(accountId: bigint, date: Date): Promise<number>
 
 export async function getAccountSummary(
   accountId: bigint,
-  fromDate: string,
-  toDate: string
+  fromDate?: string,
+  toDate?: string
 ) {
-  const from = convertDateToUTC(fromDate)
-  const to = convertDateToUTC(toDate)
-
   const summaries = await db.dailyAccountSummary.findMany({
     where: {
       accountId,
-      date: {
-        gte: from,
-        lte: to
-      }
+      ...(fromDate || toDate ? {
+        date: {
+          ...(fromDate ? { gte: convertDateToUTC(fromDate) } : {}),
+          ...(toDate ? { lte: convertDateToUTC(toDate) } : {})
+        }
+      } : {})
     },
     orderBy: {
       date: 'asc'
@@ -140,22 +139,20 @@ export async function getAccountSummary(
 
 export async function getTotalSummary(
   userId: bigint,
-  fromDate: string,
-  toDate: string
+  fromDate?: string,
+  toDate?: string
 ) {
-  const from = convertDateToUTC(fromDate)
-  const to = convertDateToUTC(toDate)
-
-  // Get all summaries for user's accounts in the date range
   const summaries = await db.dailyAccountSummary.findMany({
     where: {
       account: {
         ownerUserId: userId
       },
-      date: {
-        gte: from,
-        lte: to
-      }
+      ...(fromDate || toDate ? {
+        date: {
+          ...(fromDate ? { gte: convertDateToUTC(fromDate) } : {}),
+          ...(toDate ? { lte: convertDateToUTC(toDate) } : {})
+        }
+      } : {})
     },
     orderBy: {
       date: 'asc'
