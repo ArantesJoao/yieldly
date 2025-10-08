@@ -1,7 +1,9 @@
 import { useMemo } from "react";
-import { getLocalDateString, convertToMajor } from "@/utils/conversions";
-import { useAccountSummary } from "@/services/summary/queries";
+
 import { useCurrentAccount } from "@/contexts/currentAccountContext";
+import { getLocalDateString, convertToMajor } from "@/utils/conversions";
+import { useAccountSummary, useTotalSummary } from "@/services/summary/queries";
+
 import type { DateRange } from "@/components/ui/date-range-picker";
 
 export const useBalanceGraphData = (dateRange: DateRange) => {
@@ -15,7 +17,13 @@ export const useBalanceGraphData = (dateRange: DateRange) => {
     return getLocalDateString(dateRange.from);
   }, [dateRange.from]);
 
-  const { data: summaries, isLoading } = useAccountSummary(currentAccountId, fromDate, toDate);
+  // Use total summary when currentAccountId is "total" (TotalSummaryCard selected)
+  const isTotalView = currentAccountId === "total";
+  const { data: accountSummaries, isLoading: isAccountLoading } = useAccountSummary(currentAccountId, fromDate, toDate);
+  const { data: totalSummaries, isLoading: isTotalLoading } = useTotalSummary(fromDate, toDate, isTotalView);
+
+  const summaries = isTotalView ? totalSummaries : accountSummaries;
+  const isLoading = isTotalView ? isTotalLoading : isAccountLoading;
 
   const chartData = useMemo(() => {
     if (!summaries) return [];

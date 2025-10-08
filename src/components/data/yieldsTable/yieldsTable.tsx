@@ -3,9 +3,12 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/languageContext";
-import { formatCurrency, formatCurrencyCompact, formatDateShort, getLocalDateString } from "@/utils/conversions";
-import { useAccountSummary } from "@/services/summary/queries";
 import { useCurrentAccount } from "@/contexts/currentAccountContext";
+import { useAccountSummary, useTotalSummary } from "@/services/summary/queries";
+import { formatCurrency, formatCurrencyCompact, formatDateShort, getLocalDateString } from "@/utils/conversions";
+
+import YieldsTableSkeleton from "./YieldsTableSkeleton";
+import type { DateRange } from "@/components/ui/date-range-picker";
 import {
   Table,
   TableBody,
@@ -14,8 +17,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import YieldsTableSkeleton from "./YieldsTableSkeleton";
-import type { DateRange } from "@/components/ui/date-range-picker";
 
 interface YieldsTableProps {
   dateRange: DateRange
@@ -34,7 +35,12 @@ const YieldsTable = ({ dateRange }: YieldsTableProps) => {
     return getLocalDateString(dateRange.from);
   }, [dateRange.from]);
 
-  const { data: summaries, isLoading } = useAccountSummary(currentAccountId, fromDate, toDate);
+  const isTotalView = currentAccountId === "total";
+  const { data: accountSummaries, isLoading: isAccountLoading } = useAccountSummary(currentAccountId, fromDate, toDate);
+  const { data: totalSummaries, isLoading: isTotalLoading } = useTotalSummary(fromDate, toDate, isTotalView);
+
+  const summaries = isTotalView ? totalSummaries : accountSummaries;
+  const isLoading = isTotalView ? isTotalLoading : isAccountLoading;
 
   if (isLoading) {
     return <YieldsTableSkeleton />;

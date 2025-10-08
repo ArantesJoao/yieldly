@@ -47,12 +47,23 @@ const AccountsCarousel = () => {
     })
   }, [api, current, setCurrent])
 
+  const totalSummaryCard = React.useMemo(() => transformTotalSummaryToAcocuntCard(totalSummary), [totalSummary])
+  const shouldShowTotalSummaryCard = React.useMemo(
+    () => accounts && accounts.length > 1 && !!totalSummaryCard && !isTotalSummaryLoading && !isTotalSummaryError,
+    [accounts, totalSummaryCard, isTotalSummaryLoading, isTotalSummaryError]
+  )
+
   // Set the current account ID when accounts load or carousel changes
   React.useEffect(() => {
     if (accounts && accounts.length > 0) {
-      setCurrentAccountId(accounts[current]?.id || null)
+      if (shouldShowTotalSummaryCard && current === 0) {
+        setCurrentAccountId("total")
+      } else {
+        const accountIndex = shouldShowTotalSummaryCard ? current - 1 : current
+        setCurrentAccountId(accounts[accountIndex]?.id || null)
+      }
     }
-  }, [accounts, current, setCurrentAccountId])
+  }, [accounts, current, setCurrentAccountId, shouldShowTotalSummaryCard])
 
   if (isAccountsLoading && !accounts) {
     return (
@@ -86,15 +97,12 @@ const AccountsCarousel = () => {
     return <CarouselEmptyState />
   }
 
-  const totalSummaryCard = transformTotalSummaryToAcocuntCard(totalSummary)
-  const shouldShowTotalSummaryCard = accounts.length > 1 && !!totalSummaryCard && !isTotalSummaryLoading && !isTotalSummaryError
-
   return (
     <div className="">
       <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
         <Carousel className="w-full" setApi={setApi}>
           <CarouselContent>
-            {shouldShowTotalSummaryCard && (
+            {shouldShowTotalSummaryCard && totalSummaryCard && (
               <CarouselItem>
                 <AccountCard {...totalSummaryCard} accountCount={accounts.length} />
               </CarouselItem>
