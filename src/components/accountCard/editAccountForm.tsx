@@ -6,15 +6,16 @@ import { useTranslation } from 'react-i18next'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useIsMutating } from '@tanstack/react-query'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useUpdateAccount } from '@/services/accounts/mutations'
+
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { SimpleAccountProps } from './accountCard'
 import { Spinner } from '@/components/ui/shadcn-io/spinner'
-import { Account } from '@/types/api'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 interface EditAccountFormProps {
-  account: Account
+  account: SimpleAccountProps
   onClose: () => void
 }
 

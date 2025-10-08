@@ -4,14 +4,21 @@ import * as React from "react"
 import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
-import { Account } from "@/types/api"
 import { formatCurrency } from "@/utils/conversions"
+
 import DepositButton from "./depositButton"
 import AccountControls from "./accountControls"
 import { getInstitutionLogoPath, getInstitutionColors } from "@/utils/institutionData"
 
-interface AccountCardProps {
-  account: Account
+export interface SimpleAccountProps {
+  id: string
+  label: string
+  institution: string
+  currentBalanceMinor: number
+}
+
+export interface AccountCardProps {
+  account: SimpleAccountProps
   className?: string
   showActions?: boolean
   showControls?: boolean

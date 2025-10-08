@@ -1,6 +1,6 @@
 import { httpClient } from "@/lib/httpClient"
 
-interface DailySummary {
+export interface DailySummary {
   date: string
   balanceEndMinor: number
   yieldsMinor: number
@@ -17,7 +17,6 @@ export const getTotalSummary = async (from?: string, to?: string): Promise<Daily
 
   const response = await httpClient<DailySummary[]>(url)
 
-  console.log(response.data)
   return response.data
 }
 

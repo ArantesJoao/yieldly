@@ -34,8 +34,11 @@ export function DebugPanel() {
     return getLocalDateString(date)
   }, [currentDate])
 
-  const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate)
+  const { data: summaries, isLoading } = useTotalSummary(fromDate, toDate, true)
 
+  if (process.env.NODE_ENV !== 'development') {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border shadow-lg">

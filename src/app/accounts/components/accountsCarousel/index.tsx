@@ -1,6 +1,12 @@
 import * as React from "react"
-import { Wallet } from "lucide-react"
-import { useTranslation } from "react-i18next"
+
+import { useAccounts } from "@/services/accounts/queries"
+import { useCurrentAccount } from "@/contexts/currentAccountContext"
+
+import Dots from "./dots"
+import CarouselEmptyState from "./carouselEmptyState"
+import AccountCard from "../../../../components/accountCard/accountCard"
+import AccountCardSkeleton from "../../../../components/accountCard/accountCardSkeleton"
 
 import {
   Carousel,
@@ -8,22 +14,26 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
-import AccountCard from "../../../../components/accountCard/accountCard"
-import AccountCardSkeleton from "../../../../components/accountCard/accountCardSkeleton"
-import { useAccounts } from "@/services/accounts/queries"
-import { useCurrentAccount } from "@/contexts/currentAccountContext"
-import Dots from "./dots"
-import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
+import { useTotalSummary } from "@/services/summary/queries"
+import { transformTotalSummaryToAcocuntCard } from "@/utils/transforms"
 
 const AccountsCarousel = () => {
-  const { data: accounts, isLoading, isError } = useAccounts()
-  const { setCurrentAccountId } = useCurrentAccount()
-  const { t } = useTranslation('dashboard')
-  const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
-  const router = useRouter()
+  const { setCurrentAccountId } = useCurrentAccount()
+  const [api, setApi] = React.useState<CarouselApi>()
+
+  const {
+    data:
+    accounts,
+    isLoading: isAccountsLoading,
+    isError: isAccountsError,
+  } = useAccounts()
+
+  const {
+    data: totalSummary,
+    isLoading: isTotalSummaryLoading,
+    isError: isTotalSummaryError,
+  } = useTotalSummary(undefined, undefined, true)
 
   React.useEffect(() => {
     if (!api) {
@@ -44,7 +54,7 @@ const AccountsCarousel = () => {
     }
   }, [accounts, current, setCurrentAccountId])
 
-  if (isLoading && !accounts) {
+  if (isAccountsLoading && !accounts) {
     return (
       <div className="">
         <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
@@ -67,37 +77,27 @@ const AccountsCarousel = () => {
     )
   }
 
-  if (isError || !accounts) {
+  if (isAccountsError || !accounts) {
     // TODO: Add error state
     return <div>Error loading accounts</div>
   }
 
   if (accounts.length === 0) {
-    return (
-      <Empty className="border-none">
-        <EmptyHeader>
-          <EmptyMedia variant="icon">
-            <Wallet className="size-6" />
-          </EmptyMedia>
-          <EmptyTitle>{t('accountsCarousel.empty.title')}</EmptyTitle>
-          <EmptyDescription>
-            {t('accountsCarousel.empty.description')}
-          </EmptyDescription>
-        </EmptyHeader>
-        <EmptyContent>
-          <Button onClick={() => router.push('/accounts')}>
-            {t('accountsCarousel.empty.button')}
-          </Button>
-        </EmptyContent>
-      </Empty>
-    )
+    return <CarouselEmptyState />
   }
 
+  const totalSummaryCard = transformTotalSummaryToAcocuntCard(totalSummary)
+  console.log("accounts.length === 1 && !!totalSummaryCard", accounts.length === 1 && !!totalSummaryCard)
   return (
     <div className="">
       <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
         <Carousel className="w-full" setApi={setApi}>
           <CarouselContent>
+            {accounts.length > 1 && !!totalSummaryCard && (
+              <CarouselItem>
+                <AccountCard {...totalSummaryCard} />
+              </CarouselItem>
+            )}
             {accounts.map((account, index) => (
               <CarouselItem key={index} className="">
                 <AccountCard account={account} className="h-72" showActions />

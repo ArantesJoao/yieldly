@@ -5,6 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { useIsMutating } from '@tanstack/react-query'
 import { MoreVertical, Pencil, Trash2 } from 'lucide-react'
 
+import { useDeleteAccount } from '@/services/accounts/mutations'
+
+import EditAccountForm from './editAccountForm'
+import { Button } from "@/components/ui/button"
+import { SimpleAccountProps } from './accountCard'
+import { Spinner } from '@/components/ui/shadcn-io/spinner'
+import { ResponsiveModal } from "@/components/ui/responsive-modal"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,15 +26,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { ResponsiveModal } from "@/components/ui/responsive-modal"
-import { useDeleteAccount } from '@/services/accounts/mutations'
-import { Spinner } from '@/components/ui/shadcn-io/spinner'
-import { Account } from '@/types/api'
-import EditAccountForm from './editAccountForm'
 
 interface AccountControlsProps {
-  account: Account
+  account: SimpleAccountProps
 }
 
 const AccountControls = ({ account }: AccountControlsProps) => {

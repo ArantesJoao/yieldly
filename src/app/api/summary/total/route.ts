@@ -8,8 +8,8 @@ export const GET = withAuth(async (request, session) => {
   const { searchParams } = new URL(request.url)
 
   const queryData = summaryQuerySchema.parse({
-    from: searchParams.get('from'),
-    to: searchParams.get('to')
+    from: searchParams.get('from') || undefined,
+    to: searchParams.get('to') || undefined
   })
 
   await authorize("summary:read", {

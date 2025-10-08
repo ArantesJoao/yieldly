@@ -11,11 +11,6 @@ export const getAccounts = async (): Promise<Account[]> => {
   return response.data
 }
 
-const getTotalAccountsSummary = async (): Promise<number> => {
-  const response = await httpClient.get<number>("/api/accounts/total-balance")
-  return response.data
-}
-
 export const getAccountById = async (id: string): Promise<Account> => {
   const response = await httpClient.get<Account>(`/api/accounts/${id}`)
   return response.data

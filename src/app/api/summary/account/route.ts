@@ -10,8 +10,8 @@ export const GET = withAuth(async (request, session) => {
 
   const queryData = accountSummaryQuerySchema.parse({
     accountId: searchParams.get('accountId'),
-    from: searchParams.get('from'),
-    to: searchParams.get('to')
+    from: searchParams.get('from') || undefined,
+    to: searchParams.get('to') || undefined
   })
 
   // Check if user owns the account
