@@ -47,6 +47,9 @@
   },
   "accountCard": {
     "account": "Conta",
+    "accounts": "contas",
+    "totalPortfolio": "Portfólio Total",
+    "allAccounts": "Todas Contas",
     "balance": "Saldo",
     "totalYields": "Rendimentos Totais",
     "totalDeposits": "Depósitos Totais",

@@ -45,8 +45,11 @@
   },
   "accountCard": {
     "account": "Account",
+    "accounts": "accounts",
+    "totalPortfolio": "Total Portfolio",
     "balance": "Balance",
     "totalYields": "Total Yields",
+    "allAccounts": "All Accounts",
     "totalDeposits": "Total Deposits",
     "since": "Since",
     "deposit": "Deposit",

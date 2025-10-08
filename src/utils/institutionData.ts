@@ -5,10 +5,11 @@ interface InstitutionColorMap {
 const institutionColorMap: InstitutionColorMap = {
   nubank: "#320850",
   mercadopago: "#00AEED",
-  xp: "#050607",
+  xp: "#000",
+  total: "#006633",
 }
 
-const validInstitutionsLogoKeys = ["nubank", "mercadopago"]
+const validInstitutionsLogoKeys = ["nubank", "mercadopago", "xp", "total"]
 
 const DEFAULT_COLOR = "#0E1F34"
 

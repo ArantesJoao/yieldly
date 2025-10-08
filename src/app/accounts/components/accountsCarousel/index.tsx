@@ -87,15 +87,16 @@ const AccountsCarousel = () => {
   }
 
   const totalSummaryCard = transformTotalSummaryToAcocuntCard(totalSummary)
-  console.log("accounts.length === 1 && !!totalSummaryCard", accounts.length === 1 && !!totalSummaryCard)
+  const shouldShowTotalSummaryCard = accounts.length > 1 && !!totalSummaryCard && !isTotalSummaryLoading && !isTotalSummaryError
+
   return (
     <div className="">
       <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
         <Carousel className="w-full" setApi={setApi}>
           <CarouselContent>
-            {accounts.length > 1 && !!totalSummaryCard && (
+            {shouldShowTotalSummaryCard && (
               <CarouselItem>
-                <AccountCard {...totalSummaryCard} />
+                <AccountCard {...totalSummaryCard} accountCount={accounts.length} />
               </CarouselItem>
             )}
             {accounts.map((account, index) => (
@@ -109,8 +110,9 @@ const AccountsCarousel = () => {
       </div>
       <Dots
         current={current}
-        onClick={(index) => api?.scrollTo(index)}
         amount={accounts.length}
+        onClick={(index) => api?.scrollTo(index)}
+        shouldShowTotalSummaryCard={shouldShowTotalSummaryCard}
       />
     </div>
 

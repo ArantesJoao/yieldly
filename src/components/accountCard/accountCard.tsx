@@ -1,6 +1,7 @@
 // components/accountCard.tsx
 import Image from "next/image"
 import * as React from "react"
+import { Wallet } from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import { cn } from "@/lib/utils"
@@ -22,12 +23,15 @@ export interface AccountCardProps {
   className?: string
   showActions?: boolean
   showControls?: boolean
+  accountCount?: number
 }
 
-const AccountCard = ({ account, className, showActions = false, showControls = false }: AccountCardProps) => {
+const AccountCard = ({ account, className, showActions = false, showControls = false, accountCount = 0 }: AccountCardProps) => {
   const { t } = useTranslation('accounts')
   const backgroundColor = getInstitutionColors(account.institution ?? "")
   const institutionLogo = getInstitutionLogoPath(account.institution ?? "")
+
+  const isTotalCard = account.id === "total"
 
   return (
     <div
@@ -35,7 +39,7 @@ const AccountCard = ({ account, className, showActions = false, showControls = f
         "flex flex-col justify-between group relative w-full overflow-hidden rounded-2xl p-5 hover:scale-[1.01] focus-within:scale-[1.01] text-linen-50",
         className
       )}
-      style={{ backgroundColor }}
+      style={{ background: isTotalCard ? "linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)" : backgroundColor }}
       role="button"
       tabIndex={0}
       aria-label={`Conta ${account?.label ?? ""}`}
@@ -52,16 +56,26 @@ const AccountCard = ({ account, className, showActions = false, showControls = f
 
       <div className="relative flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <div className="text-sm/5 opacity-90">{t('accountCard.account')}</div>
-          <div className="truncate text-xl font-semibold tracking-[-0.01em]">
-            {account.label}
+          <div className="text-md/5 font-medium opacity-90">{
+            isTotalCard ? t('accountCard.totalPortfolio') : t('accountCard.account')
+          }</div>
+          <div className="truncate text-2xl font-bold tracking-[-0.01em]">
+            {isTotalCard ? t('accountCard.allAccounts') : account.label}
           </div>
+          {accountCount > 1 && (
+            <div className="text-sm/5 font opacity-90">{accountCount} {t('accountCard.accounts')}</div>
+          )}
         </div>
 
         {/* Brand chip (optional, subtle) */}
-        {institutionLogo && (
+        {institutionLogo && !isTotalCard && (
           <div className="h-8 w-8 shrink-0">
             <Image src={institutionLogo} alt={account.institution} width={32} height={32} />
+          </div>
+        )}
+        {isTotalCard && (
+          <div className="h-10 w-10 shrink-0 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <Wallet className="h-5 w-5 text-white" strokeWidth={2.5} />
           </div>
         )}
       </div>
