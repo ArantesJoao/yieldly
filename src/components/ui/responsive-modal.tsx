@@ -51,7 +51,6 @@ export function ResponsiveModal({
   contentClassName,
 }: ResponsiveModalProps) {
   const { t } = useTranslation('common')
-  const formContainerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
   if (isDesktop) {
@@ -77,10 +76,9 @@ export function ResponsiveModal({
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent
-        ref={formContainerRef}
         className="min-h-[70vh]"
       >
         <DrawerHeader className="text-left">
