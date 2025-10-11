@@ -23,7 +23,7 @@ const YieldsTableSkeleton = () => {
           </TableHeader>
           <TableBody>
             {Array.from({ length: 8 }).map((_, index) => (
-              <TableRow key={index}>
+              <TableRow key={index + "-skeleton"}>
                 <TableCell>
                   <Skeleton className="h-5 w-12" />
                 </TableCell>

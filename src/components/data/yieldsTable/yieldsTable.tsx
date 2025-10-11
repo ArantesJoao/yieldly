@@ -68,7 +68,7 @@ const YieldsTable = ({ dateRange }: YieldsTableProps) => {
           </TableHeader>
           <TableBody>
             {summaries.slice().reverse().map((summary) => (
-              <TableRow key={summary.date}>
+              <TableRow key={summary.date + summary.balanceEndMinor}>
                 <TableCell className="font-medium text-nowrap">{formatDateShort(summary.date, locale)}</TableCell>
                 <TableCell className="font-mono">
                   {formatCurrency(summary.balanceEndMinor, "BRL")}

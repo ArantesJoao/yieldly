@@ -15,7 +15,7 @@ export function CustomRange({ value, onChange, onApply }: CustomRangeProps) {
   const { t } = useTranslation('common')
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 -mb-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <h4 className="font-medium text-sm">{t('modals.dateRangePicker.title')}</h4>
