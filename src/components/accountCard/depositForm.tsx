@@ -40,6 +40,7 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
   } = useDepositFormState()
 
   const { t } = useTranslation('accounts')
+  const { t: tCommon } = useTranslation('common')
 
   const { newBalance } = useBalanceCalculations({
     currentBalanceMinor,
@@ -141,7 +142,9 @@ const DepositForm = ({ accountId, currentBalanceMinor, toggleDialog }: DepositFo
                 <SelectContent>
                   {transactionTypes?.filter(type => type.direction === 'inflow').map((type) => (
                     <SelectItem key={type.id} value={type.id}>
-                      {type.name}
+                      {type.name === 'Yields' ? tCommon('common.yields') :
+                        type.name === 'Deposit' ? tCommon('common.deposit') :
+                          type.name}
                     </SelectItem>
                   ))}
                 </SelectContent>

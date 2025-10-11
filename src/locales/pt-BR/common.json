@@ -26,7 +26,9 @@
     "loading": "Carregando...",
     "error": "Erro",
     "success": "Sucesso",
-    "noData": "Nenhum dado disponível"
+    "noData": "Nenhum dado disponível",
+    "yields": "Rendimentos",
+    "deposit": "Depósito"
   },
   "modals": {
     "dateRangePicker": {

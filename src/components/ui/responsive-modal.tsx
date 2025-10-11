@@ -100,7 +100,7 @@ export function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent ref={formContainerRef} className="min-h-[70vh]">
+      <DrawerContent ref={formContainerRef} className="min-h-[70vh] pb-12">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}
