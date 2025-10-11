@@ -175,9 +175,3 @@
 @utility show-div {
   border: 1px solid red;
 }
-
-@layer utilities {
-  .drawer-safe-padding {
-    padding-bottom: env(keyboard-inset-height, env(safe-area-inset-bottom, 48px)) !important;
-  }
-}
