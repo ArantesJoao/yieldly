@@ -1,8 +1,18 @@
-// eslint-disable @typescript-eslint/no-explicit-any
-
 import { useEffect, useState } from "react"
 
 type KeyboardState = { isOpen: boolean; bottom: number }
+
+// Type definitions for the Virtual Keyboard API (not yet in TypeScript)
+interface VirtualKeyboard extends EventTarget {
+  boundingRect: DOMRect
+  overlaysContent: boolean
+  addEventListener(type: "geometrychange", listener: () => void): void
+  removeEventListener(type: "geometrychange", listener: () => void): void
+}
+
+interface NavigatorWithVirtualKeyboard extends Navigator {
+  virtualKeyboard?: VirtualKeyboard
+}
 
 export function useKeyboardInsets(enabled = true): KeyboardState {
   const [state, setState] = useState<KeyboardState>({ isOpen: false, bottom: 0 })
@@ -17,9 +27,9 @@ export function useKeyboardInsets(enabled = true): KeyboardState {
     }
 
     // 1) Prefer the Virtual Keyboard API when present (Chromium)
-    const navAny = navigator as any
-    if (navAny.virtualKeyboard) {
-      const vk = navAny.virtualKeyboard
+    const nav = navigator as NavigatorWithVirtualKeyboard
+    if (nav.virtualKeyboard) {
+      const vk = nav.virtualKeyboard
       try { vk.overlaysContent = true } catch { }
       const update = () => updateState(vk.boundingRect?.height ?? 0)
       const onGeometry = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update) }
