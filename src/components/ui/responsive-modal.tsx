@@ -26,6 +26,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { cn } from "@/lib/utils"
+import { useEffect, useRef } from "react"
 
 interface ResponsiveModalProps {
   open?: boolean
@@ -51,7 +52,28 @@ export function ResponsiveModal({
   contentClassName,
 }: ResponsiveModalProps) {
   const { t } = useTranslation('common')
+  const formContainerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+
+  useEffect(() => {
+    if (isDesktop) return;
+    const handleResize = () => {
+      if (formContainerRef.current) {
+        formContainerRef.current.style.setProperty('bottom', `env(safe-area-inset-bottom)`);
+      }
+    };
+
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleResize);
+      handleResize();
+    }
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener("resize", handleResize);
+      }
+    };
+  }, []);
 
   if (isDesktop) {
     return (
@@ -78,19 +100,20 @@ export function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent>
+      <DrawerContent ref={formContainerRef} className="min-h-[70vh] pb-12">
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}
         </DrawerHeader>
-        <div className={cn("px-4", contentClassName)}>{children}</div>
-        {!hideCancel && (
-          <DrawerFooter className="pt-2">
-            <DrawerClose asChild>
+        <div className={cn("px-4", contentClassName)}>
+          {children}
+          {!hideCancel && (
+            <DrawerClose asChild className="w-full mt-2">
               <Button variant="outline">{t('buttons.cancel')}</Button>
             </DrawerClose>
-          </DrawerFooter>
-        )}
+          )}
+        </div>
+
       </DrawerContent>
     </Drawer>
   )

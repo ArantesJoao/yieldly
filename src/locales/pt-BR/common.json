@@ -31,8 +31,8 @@
   "modals": {
     "dateRangePicker": {
       "title": "Selecionar período",
-      "quickRanges": "Períodos pré-definidos",
-      "customRange": "Período personalizado",
+      "quickRanges": "Pré-definidos",
+      "customRange": "Personalizado",
       "selectPredefinedRange": "Selecione um período pré-definido",
       "ranges": {
         "last7Days": "Últimos 7 dias",
