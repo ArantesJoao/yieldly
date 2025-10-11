@@ -166,6 +166,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -177,6 +178,6 @@
 
 @layer utilities {
   .drawer-safe-padding {
-    padding-bottom: env(keyboard-inset-height, env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(keyboard-inset-height, env(safe-area-inset-bottom, 48px)) !important;
   }
 }
