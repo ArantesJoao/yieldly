@@ -34,7 +34,7 @@ export default function DepositButton({ accountId, label, currentBalanceMinor }:
       <ResponsiveModal
         open={isOpen}
         onOpenChange={setIsOpen}
-        title={`${t('accountCard.deposit')} ${label}`}
+        title={`${t('accountCard.depositTo')} ${label}`}
         dialogClassName="backdrop-blur-2xl bg-background/90 border-border/50"
       >
         <DepositForm

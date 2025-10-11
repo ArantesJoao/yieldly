@@ -4,6 +4,7 @@ import * as React from "react"
 import { useTranslation } from "react-i18next"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { useKeyboardInsets } from "@/hooks/use-keyboard-insets"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -26,7 +27,7 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { cn } from "@/lib/utils"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 
 interface ResponsiveModalProps {
   open?: boolean
@@ -54,26 +55,7 @@ export function ResponsiveModal({
   const { t } = useTranslation('common')
   const formContainerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery("(min-width: 768px)")
-
-  useEffect(() => {
-    if (isDesktop) return;
-    const handleResize = () => {
-      if (formContainerRef.current) {
-        formContainerRef.current.style.setProperty('bottom', `env(keyboard-inset-height, 0px)`);
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-      handleResize();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
-    };
-  }, []);
+  const { isOpen: isKeyboardOpen, bottom: keyboardBottom } = useKeyboardInsets(!isDesktop)
 
   if (isDesktop) {
     return (
@@ -100,7 +82,16 @@ export function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent ref={formContainerRef} className="min-h-[70vh] pb-12">
+      <DrawerContent
+        ref={formContainerRef}
+        className="min-h-[70vh] pb-12"
+        style={{
+          // Force bottom to 0 when keyboard is closed
+          bottom: isKeyboardOpen ? `${keyboardBottom}px` : "0px",
+          // Keep visual padding while keyboard is open
+          paddingBottom: isKeyboardOpen ? `calc(${keyboardBottom}px + 3rem)` : "3rem",
+        }}
+      >
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}

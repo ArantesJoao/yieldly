@@ -30,7 +30,7 @@
     "note": "Note",
     "addNote": "Add Note",
     "spreadYields": "Spread Yields",
-    "makeDeposit": "Deposit to"
+    "makeDeposit": "Deposit"
   },
   "editForm": {
     "title": "Edit Account",
@@ -52,7 +52,7 @@
     "allAccounts": "All Accounts",
     "totalDeposits": "Total Deposits",
     "since": "Since",
-    "deposit": "Deposit",
+    "depositTo": "Deposit to",
     "edit": "Edit",
     "delete": "Delete",
     "editDescription": "Update your account information",
