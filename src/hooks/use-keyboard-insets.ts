@@ -1,3 +1,5 @@
+// eslint-disable @typescript-eslint/no-explicit-any
+
 import { useEffect, useState } from "react"
 
 type KeyboardState = { isOpen: boolean; bottom: number }
