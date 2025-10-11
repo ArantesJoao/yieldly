@@ -1,8 +1,8 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { useTranslation } from 'react-i18next'
 import '@/lib/i18n'
+import { useTranslation } from 'react-i18next'
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 
 type Locale = 'pt-BR' | 'en-US'
 

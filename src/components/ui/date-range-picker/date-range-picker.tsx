@@ -76,7 +76,7 @@ export function DateRangePicker({ value, onChange, className }: DateRangePickerP
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="pb-0">
-          <DrawerTitle>{t('dateRangePicker.title')}</DrawerTitle>
+          <DrawerTitle>{t('modals.dateRangePicker.title')}</DrawerTitle>
         </DrawerHeader>
         <div className="overflow-y-auto max-h-[70vh]">
           <DateRangePickerContent

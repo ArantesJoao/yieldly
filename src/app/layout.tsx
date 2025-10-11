@@ -56,8 +56,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* !important is used to override the drawer styles */}
       <body
-        className={`${openSans.variable} mt-22 md:mt-24 max-w-3xl mx-auto antialiased px-4.5`}
+        className={`${openSans.variable} mt-22 md:mt-24 max-w-3xl mx-auto antialiased px-4.5!`}
       >
         <Toaster />
         <Providers>

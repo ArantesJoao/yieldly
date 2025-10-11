@@ -30,10 +30,10 @@ export function DateRangePickerContent({ value, onChange, onClose }: DateRangePi
       <div className="px-4 pt-4">
         <TabsList className="w-full">
           <TabsTrigger value="quick" className="flex-1">
-            {t('dateRangePicker.quickRanges')}
+            {t('modals.dateRangePicker.quickRanges')}
           </TabsTrigger>
           <TabsTrigger value="custom" className="flex-1">
-            {t('dateRangePicker.customRange')}
+            {t('modals.dateRangePicker.customRange')}
           </TabsTrigger>
         </TabsList>
       </div>

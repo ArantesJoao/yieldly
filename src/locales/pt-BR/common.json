@@ -19,13 +19,29 @@
     "edit": "Editar",
     "close": "Fechar",
     "submit": "Enviar",
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "apply": "Aplicar Período"
   },
   "common": {
     "loading": "Carregando...",
     "error": "Erro",
     "success": "Sucesso",
     "noData": "Nenhum dado disponível"
+  },
+  "modals": {
+    "dateRangePicker": {
+      "title": "Selecionar período",
+      "quickRanges": "Períodos pré-definidos",
+      "customRange": "Período personalizado",
+      "selectPredefinedRange": "Selecione um período pré-definido",
+      "ranges": {
+        "last7Days": "Últimos 7 dias",
+        "last15Days": "Últimos 15 dias",
+        "last30Days": "Últimos 30 dias",
+        "last90Days": "Últimos 90 dias",
+        "last6Months": "Últimos 6 meses",
+        "lastYear": "Último ano"
+      }
+    }
   }
 }
-

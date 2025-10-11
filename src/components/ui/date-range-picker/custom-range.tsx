@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { formatDateShort, getLocalDateString } from "@/utils/conversions"
 import type { DateRange } from "./types"
+import { useTranslation } from "react-i18next"
 
 interface CustomRangeProps {
   value: DateRange
@@ -11,11 +12,13 @@ interface CustomRangeProps {
 }
 
 export function CustomRange({ value, onChange, onApply }: CustomRangeProps) {
+  const { t } = useTranslation('common')
+
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <h4 className="font-medium text-sm">Select Date Range</h4>
+          <h4 className="font-medium text-sm">{t('modals.dateRangePicker.title')}</h4>
           {value.from && value.to && (
             <span className="text-xs text-muted-foreground">
               {formatDateShort(getLocalDateString(value.from))} - {formatDateShort(getLocalDateString(value.to))}
@@ -23,7 +26,7 @@ export function CustomRange({ value, onChange, onApply }: CustomRangeProps) {
           )}
         </div>
         <p className="text-xs text-muted-foreground">
-          Click to select start date, then click to select end date
+          {t('modals.dateRangePicker.selectPredefinedRange')}
         </p>
         <Calendar
           mode="range"
@@ -47,7 +50,7 @@ export function CustomRange({ value, onChange, onApply }: CustomRangeProps) {
       </div>
 
       <Button onClick={onApply} className="w-full" size="lg">
-        Apply Range
+        {t('buttons.apply')}
       </Button>
     </div>
   )
