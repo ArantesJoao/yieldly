@@ -13,6 +13,8 @@ import {
   CarouselApi,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel"
 import { useTotalSummary } from "@/services/summary/queries"
 import { transformTotalSummaryToAcocuntCard } from "@/utils/transforms"
@@ -67,22 +69,27 @@ const AccountsCarousel = () => {
 
   if (isAccountsLoading && !accounts) {
     return (
-      <div className="">
-        <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
-          <Carousel className="w-full">
-            <CarouselContent>
-              {[1, 2, 3].map((index) => (
-                <CarouselItem key={index}>
-                  <AccountCardSkeleton className="h-72" />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
+      <div className="w-full max-w-3xl md:mx-0">
+        <div className="relative">
+          <Carousel className="w-full" setApi={setApi}>
+            <div className="flex justify-center md:mx-0 overflow-hidden">
+              <CarouselContent>
+                {[1, 2, 3].map((index) => (
+                  <CarouselItem key={index} className="md:py-2">
+                    <AccountCardSkeleton className="h-72" />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+            </div>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
           </Carousel>
         </div>
         <Dots
-          current={0}
-          onClick={() => { }}
+          current={current}
           amount={3}
+          onClick={(index) => api?.scrollTo(index)}
+          shouldShowTotalSummaryCard={shouldShowTotalSummaryCard}
         />
       </div>
     )
@@ -98,23 +105,26 @@ const AccountsCarousel = () => {
   }
 
   return (
-    <div className="">
-      <div className="w-screen flex justify-center -mx-4.5 overflow-hidden">
+    <div className="w-full max-w-3xl">
+      <div className="relative">
         <Carousel className="w-full" setApi={setApi}>
-          <CarouselContent>
-            {shouldShowTotalSummaryCard && totalSummaryCard && (
-              <CarouselItem>
-                <AccountCard {...totalSummaryCard} accountCount={accounts.length} />
-              </CarouselItem>
-            )}
-            {accounts.map((account, index) => (
-              <CarouselItem key={index} className="">
-                <AccountCard account={account} className="h-72" showActions />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+          <div className="flex justify-center md:mx-0 overflow-hidden">
+            <CarouselContent>
+              {shouldShowTotalSummaryCard && totalSummaryCard && (
+                <CarouselItem className="md:py-2">
+                  <AccountCard {...totalSummaryCard} accountCount={accounts.length} />
+                </CarouselItem>
+              )}
+              {accounts.map((account, index) => (
+                <CarouselItem key={index} className="md:py-2">
+                  <AccountCard account={account} className="h-72" showActions />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </div>
+          <CarouselPrevious className="hidden md:flex" />
+          <CarouselNext className="hidden md:flex" />
         </Carousel>
-
       </div>
       <Dots
         current={current}

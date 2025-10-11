@@ -36,7 +36,7 @@ const AccountCard = ({ account, className, showActions = false, showControls = f
   return (
     <div
       className={cn(
-        "flex flex-col justify-between group relative w-full overflow-hidden rounded-2xl p-5 hover:scale-[1.01] focus-within:scale-[1.01] text-linen-50",
+        "flex flex-col justify-between group relative w-full overflow-hidden rounded-2xl p-5 md:hover:shadow-md md:hover:shadow-black/20 transition-all duration-200 text-linen-50",
         className
       )}
       style={{ background: isTotalCard ? "linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%)" : backgroundColor }}

@@ -23,7 +23,7 @@ const Dots = ({ amount, current, onClick, shouldShowTotalSummaryCard }: DotsProp
           <div
             key={index}
             onClick={() => onClick(carouselIndex)}
-            className={cn("w-2 h-2 rounded-full backdrop-blur-xl bg-gray-950/10", current === carouselIndex && "bg-gray-950/40")}
+            className={cn("w-2 h-2 rounded-full backdrop-blur-xl bg-gray-950/10 cursor-pointer", current === carouselIndex && "bg-gray-950/40")}
           />
         )
       })}

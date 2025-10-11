@@ -12,7 +12,7 @@ const openSans = Open_Sans({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#fcfcf5",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -57,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${openSans.variable} mt-24 antialiased m-4.5`}
+        className={`${openSans.variable} mt-22 md:mt-24 max-w-3xl mx-auto antialiased px-4.5`}
       >
         <Toaster />
         <Providers>
