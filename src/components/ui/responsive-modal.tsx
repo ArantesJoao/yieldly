@@ -20,13 +20,11 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer"
 import { cn } from "@/lib/utils"
-import { useEffect, useRef } from "react"
 
 interface ResponsiveModalProps {
   open?: boolean
@@ -52,28 +50,7 @@ export function ResponsiveModal({
   contentClassName,
 }: ResponsiveModalProps) {
   const { t } = useTranslation('common')
-  const formContainerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery("(min-width: 768px)")
-
-  useEffect(() => {
-    if (isDesktop) return;
-    const handleResize = () => {
-      if (formContainerRef.current) {
-        formContainerRef.current.style.setProperty('bottom', `env(safe-area-inset-bottom)`);
-      }
-    };
-
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleResize);
-      handleResize();
-    }
-
-    return () => {
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleResize);
-      }
-    };
-  }, []);
 
   if (isDesktop) {
     return (
@@ -100,7 +77,7 @@ export function ResponsiveModal({
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
-      <DrawerContent ref={formContainerRef} className="min-h-[70vh] pb-12">
+      <DrawerContent className={cn("min-h-[70vh] pb-12 drawer-safe-padding")}>
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
           {description && <DrawerDescription>{description}</DrawerDescription>}
@@ -113,9 +90,7 @@ export function ResponsiveModal({
             </DrawerClose>
           )}
         </div>
-
       </DrawerContent>
     </Drawer>
   )
 }
-
