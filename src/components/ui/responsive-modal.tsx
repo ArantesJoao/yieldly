@@ -4,7 +4,6 @@ import * as React from "react"
 import { useTranslation } from "react-i18next"
 
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { useKeyboardInsets } from "@/hooks/use-keyboard-insets"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -54,7 +53,6 @@ export function ResponsiveModal({
   const { t } = useTranslation('common')
   const formContainerRef = useRef<HTMLDivElement>(null)
   const isDesktop = useMediaQuery("(min-width: 768px)")
-  const { isOpen: isKeyboardOpen, bottom: keyboardBottom } = useKeyboardInsets(!isDesktop)
 
   if (isDesktop) {
     return (
@@ -83,13 +81,7 @@ export function ResponsiveModal({
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
       <DrawerContent
         ref={formContainerRef}
-        className="min-h-[70vh] pb-12"
-        style={{
-          // Force bottom to 0 when keyboard is closed
-          bottom: isKeyboardOpen ? `${keyboardBottom}px` : "0px",
-          // Keep visual padding while keyboard is open
-          paddingBottom: isKeyboardOpen ? `calc(${keyboardBottom}px + 3rem)` : "3rem",
-        }}
+        className="min-h-[70vh]"
       >
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
