@@ -14,6 +14,10 @@ const openSans = Open_Sans({
 export const viewport: Viewport = {
   themeColor: "#fcfcf5",
   width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  interactiveWidget: "resizes-content",
 };
 
 export const metadata: Metadata = {
