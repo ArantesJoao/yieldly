@@ -33,7 +33,7 @@ export default function HomeClient() {
   }
 
   return (
-    <div className="min-h-screen -mt-24 -m-4.5">
+    <div className="min-h-screen -mt-24 w-screen relative left-1/2 -translate-x-1/2 overflow-x-hidden">
       <HeroSection
         onGetStarted={handleGetStarted}
         isLoading={isLoading}
