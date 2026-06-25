@@ -1,36 +1,81 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📈 Yieldly
 
-## Getting Started
+Track your money across accounts and see how it grows. Yieldly is a personal
+finance tracker focused on **investment yields** — log balances per account,
+record deposits and withdrawals, and watch your daily yield and total balance
+trend over time.
 
-First, run the development server:
+## Features
+
+- **Accounts** — group your money by institution + label (e.g. "Nubank — Reserve")
+- **Transaction types** — custom inflow/outflow categories per user; new accounts
+  are seeded with sensible defaults on first sign-in
+- **Ledger** — dated entries with amount and an optional note, stored in minor
+  units (cents) to avoid floating-point drift
+- **Spread** — distribute a single amount (e.g. a month's yield) evenly across a
+  date range instead of entering it day by day
+- **Daily summaries** — per-account end balance, yields and deposits rolled up by
+  day, plus an account-level and total overview
+- **Balance graph** — visualize how each account (and your total) evolves over time
+- **Roles & authorization** — `admin` / `member` / `viewer` with a permission layer
+  guarding every mutation
+- **i18n** — multi-language UI (pt-BR default) via i18next
+- Installable **PWA**
+
+## Tech
+
+Next.js 15 (App Router, Turbopack) · React 19 · Prisma 6 + Postgres ·
+Auth.js / NextAuth v4 (Google) · TanStack Query · React Hook Form + Zod ·
+Recharts · Tailwind + shadcn/ui · PWA (`@ducanh2912/next-pwa`)
+
+Money is stored as integer **minor units** everywhere (`amountMinor`,
+`balanceEndMinor`, `yieldsMinor`, `depositsMinor`) and formatted on display.
+
+## Local setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env        # then fill in the values below
+npx prisma migrate dev      # create the schema in your Postgres database
+npm run dev                 # runs on http://localhost:3001
 ```
 
-Open [http://localhost:3001](http://localhost:3001) with your browser to see the result.
+The dev server runs on a fixed non-default port (**3001**) so it won't clash with
+other projects that use 3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | Postgres connection string |
+| `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google OAuth client |
+| `ADMIN_EMAIL` | email that is granted the `admin` role on first sign-in |
+| `NEXTAUTH_SECRET` | NextAuth session secret (`npx auth secret` or `openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | base URL of the app (e.g. `http://localhost:3001`) |
+| `NEXT_PUBLIC_API_URL` | optional API base override for the HTTP client |
 
-## Learn More
+### Google OAuth
 
-To learn more about Next.js, take a look at the following resources:
+1. Create an OAuth client (Web) at https://console.cloud.google.com/apis/credentials
+2. Add redirect URI `http://localhost:3001/api/auth/callback/google` (and your prod URL later)
+3. On the OAuth consent screen, add yourself as a **Test user**
+4. Put the client id/secret into `.env` as `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Useful scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev          # dev server on :3001 (Turbopack)
+npm run build        # production build
+npm run db:migrate   # prisma migrate dev
+npm run db:push      # prisma db push (no migration file)
+npm run db:studio    # open Prisma Studio
+npm run db:generate  # regenerate Prisma client
+npm run lint         # eslint
+```
 
-## Deploy on Vercel
+## Deploying to Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Push to GitHub, import the repo in Vercel
+2. Set the env vars above (`DATABASE_URL`, `GOOGLE_*`, `ADMIN_EMAIL`, `NEXTAUTH_*`)
+3. Add the production redirect URI in GCP: `https://YOUR_DOMAIN/api/auth/callback/google`
+4. `prisma generate` runs on install; run `prisma migrate deploy` for the schema
