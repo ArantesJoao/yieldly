@@ -28,9 +28,12 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       setLocaleState(savedLocale)
       i18n.changeLanguage(savedLocale)
     } else {
-      // Set default locale
-      setLocaleState('pt-BR')
-      i18n.changeLanguage('pt-BR')
+      // No saved preference: follow the browser, defaulting to English
+      const browserLocale: Locale = navigator.language.toLowerCase().startsWith('pt')
+        ? 'pt-BR'
+        : 'en-US'
+      setLocaleState(browserLocale)
+      i18n.changeLanguage(browserLocale)
     }
   }, [i18n])
 
