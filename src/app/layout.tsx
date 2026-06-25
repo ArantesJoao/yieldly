@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     description: "Track your personal investments and yields with ease",
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Yieldly - Personal Investment Tracker",
     description: "Track your personal investments and yields with ease",
   },
